@@ -55,7 +55,17 @@ export async function api(path, { method = "GET", body } = {}) {
       path !== "/auth/me"
     )
       window.dispatchEvent(new Event("session-expired"));
-    if (result.error?.code === "CSRF_INVALID") clearCsrf();
+    if (result.error?.code === "CSRF_INVALID") {
+      clearCsrf();
+      if (!path.startsWith("/auth/")) {
+        try {
+          await api("/auth/me");
+        } catch (sessionError) {
+          if (sessionError.status === 401)
+            window.dispatchEvent(new Event("session-expired"));
+        }
+      }
+    }
     throw new ApiError(response.status, result.error);
   }
   return result;

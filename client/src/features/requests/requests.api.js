@@ -1,13 +1,35 @@
 import { api } from "../../lib/api.js";
 export const requestApi = {
-  list: (review, page = 1) =>
-    api(`/${review ? "review/requests" : "requests/mine"}?page=${page}`),
+  list: (review, page = 1, status = review ? "pending" : "all") =>
+    api(
+      `/${review ? "review/requests" : "requests/mine"}?page=${page}&status=${status}`,
+    ),
   detail: (id) => api(`/requests/${id}`),
   create: (resourceId, reason) =>
     api("/requests", { method: "POST", body: { resourceId, reason } }),
   decide: (id, body) =>
     api(`/review/requests/${id}/decision`, { method: "POST", body }),
+  cancel: (id, revision) =>
+    api(`/requests/${id}/cancel`, { method: "POST", body: { revision } }),
+  resubmit: (id, revision, reason) =>
+    api(`/requests/${id}/resubmit`, {
+      method: "POST",
+      body: { revision, reason },
+    }),
 };
+export function matchesLearnerTransition(saved, attempt, actorId) {
+  const event = saved.history.at(-1);
+  return (
+    saved.revision === attempt.revision + 1 &&
+    saved.status === (attempt.action === "cancel" ? "cancelled" : "pending") &&
+    event?.action === attempt.action &&
+    event.actorId === actorId &&
+    (attempt.action !== "resubmit" ||
+      (saved.reason === attempt.reason &&
+        event.reason === attempt.reason &&
+        saved.decisionReason === null))
+  );
+}
 export async function loadAllMine(read = api) {
   const first = await read("/requests/mine?page=1&pageSize=50");
   const records = [...first.data];

@@ -24,7 +24,7 @@ export function SessionProvider({ children }) {
     refresh();
     const expired = () => {
       clearCsrf();
-      setSession({ loading: false, user: null, error: null });
+      setSession({ loading: false, user: null, error: null, expired: true });
     };
     window.addEventListener("session-expired", expired);
     return () => window.removeEventListener("session-expired", expired);

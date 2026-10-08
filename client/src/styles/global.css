@@ -1021,3 +1021,23 @@ p {
   border-color: var(--border);
   box-shadow: none;
 }
+.status-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.learner-actions form {
+  display: grid;
+  gap: 12px;
+}
+.learner-actions label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.learner-actions textarea {
+  min-height: 180px;
+}
+.request-feedback {
+  background: var(--soft-surface);
+}

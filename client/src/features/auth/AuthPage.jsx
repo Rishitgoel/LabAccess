@@ -22,7 +22,7 @@ export default function AuthPage({ registration = false }) {
     const first = Object.keys(fields)[0];
     if (!busy && first) form.current?.elements[first]?.focus();
   }, [fields, busy]);
-  const { login } = useSession();
+  const { login, expired } = useSession();
   const navigate = useNavigate(),
     location = useLocation();
   async function submit(event) {
@@ -121,6 +121,11 @@ export default function AuthPage({ registration = false }) {
           ? "Join as a learner to request resources."
           : "Sign in to your learning workspace."}
       </p>
+      {expired && !registration && (
+        <p role="status" className="notice">
+          Your session ended. Sign in again to continue.
+        </p>
+      )}
       {location.state?.registered && (
         <p role="status" className="notice">
           Account created. Sign in to continue.

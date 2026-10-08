@@ -2,7 +2,7 @@
 
 A MERN learning-resource request and review application. Approval records a decision; it does not provision external access.
 
-**Current state: Phase 4 verified locally.** Learners can request resources, follow saved statuses, and read their request history. Reviewers can open the pending queue and approve or reject with a reason and confirmation. Refresh/direct navigation retains MongoDB state; stale decisions refresh the saved record, and uncertain writes are reconciled before another action. Cancellation, resubmission, and status filters in the browser remain Phase 5. `/preview` is an explicitly unsaved design demonstration. Genuine Kiro task evidence and public hosting remain open.
+**Current state: Phase 5 verified locally.** Learners can request, cancel pending requests with confirmation, and update/resubmit rejected or cancelled requests. Reviewers approve or reject with a reason and confirmation. Both lists support all required status filters and pagination; details/back preserves filters and recovers pages emptied by mutations. Complete history persists across refreshes, approved requests are read-only, and uncertain writes are reconciled before another action. `/preview` is an explicitly unsaved design demonstration. Integrated polish, fresh-clone/release acceptance, genuine Kiro evidence, and hosting remain open.
 
 ![Approved request](docs/screenshots/phase4-learner-approved-desktop.png)
 
@@ -55,7 +55,7 @@ npm run build
 npm audit
 ```
 
-The 47 checks cover authentication, workflow correctness, and client recovery: real unique indexes, ownership, races, revisions/history, validation, projections, paging, complete catalog status reads, and write reconciliation without automatic replay. A real server child process verifies startup and a persisted API journey. Tests use isolated disposable MongoDB databases and never delete development data. Live browser checks cover the learner → reviewer → approved history journey, second-account isolation, stale decisions, failed reads/writes, and lost responses. See [verification](docs/verification.md).
+The 54 checks cover authentication, workflow correctness, and client recovery: real unique indexes, ownership, races, revisions/history, validation, projections, filter/page contracts, complete catalog status reads, write reconciliation, and expired-CSRF recovery without replay. A real server child process verifies startup and a persisted API journey. Tests use isolated disposable MongoDB databases and never delete development data. Browser checks cover cancel → resubmit → reject → resubmit → approve, all six persisted events, 21-row pagination, last-row page recovery, account isolation, stale decisions, failed reads/writes, and lost responses. See [verification](docs/verification.md).
 
 For a local same-origin built-client check, run `npm start` after building while retaining development settings; open `http://127.0.0.1:3001` and set `APP_ORIGIN` to that exact origin first. Restore the Vite origin when returning to `npm run dev`.
 

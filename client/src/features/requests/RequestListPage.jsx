@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/card";
@@ -6,17 +7,23 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "./StatusBadge";
 import { useRequests } from "./useRequests";
 import { formatDate } from "@/lib/dates";
+import { readListQuery, requestStatuses, availablePage } from "./list-query";
 export default function RequestListPage({ review = false }) {
   const [params, setParams] = useSearchParams();
-  const rawPage = params.get("page") ?? "1";
-  const page =
-    /^[1-9]\d*$/.test(rawPage) && Number.isSafeInteger(Number(rawPage))
-      ? Number(rawPage)
-      : 1;
+  const { page, status } = readListQuery(params, review);
   const { data, loading, error, refresh } = useRequests(
     review ? "review" : "mine",
     page,
+    status,
   );
+  useEffect(() => {
+    if (!loading && data?.pagination) {
+      const next = availablePage(page, data.pagination.totalPages);
+      if (next !== page)
+        setParams({ status, page: String(next) }, { replace: true });
+    }
+  }, [loading, data, page, status, setParams]);
+  const filtered = status !== "all";
   return (
     <AppShell>
       <div className="workflow-heading">
@@ -24,13 +31,31 @@ export default function RequestListPage({ review = false }) {
           <h1>{review ? "Review queue" : "My requests"}</h1>
           <p>
             {review
-              ? "Review pending learner requests. Oldest first."
+              ? status === "pending"
+                ? "Review pending learner requests. Oldest first."
+                : "Browse learner requests and saved decisions. Latest first."
               : "Follow decisions and track your access requests."}
           </p>
         </div>
         <Link className="text-action" to="/">
           Browse resources →
         </Link>
+      </div>
+      <div
+        className="status-filters"
+        role="group"
+        aria-label="Filter requests by status"
+      >
+        {requestStatuses.map((value) => (
+          <Button
+            key={value}
+            variant={status === value ? "default" : "outline"}
+            aria-pressed={status === value}
+            onClick={() => setParams({ status: value, page: "1" })}
+          >
+            {value[0].toUpperCase() + value.slice(1)}
+          </Button>
+        ))}
       </div>
       {loading ? (
         <Card
@@ -49,11 +74,13 @@ export default function RequestListPage({ review = false }) {
         </Card>
       ) : !data.data.length ? (
         <Card className="feedback">
-          <h2>{review ? "No pending requests" : "No requests to show"}</h2>
+          <h2>{filtered ? `No ${status} requests` : "No requests to show"}</h2>
           <p>
-            {review
-              ? "New learner requests will appear here."
-              : "Browse resources to make your first request."}
+            {filtered
+              ? "No requests match this status. Choose another filter to see more."
+              : review
+                ? "Learner requests will appear here."
+                : "Browse resources to make your first request."}
           </p>
           <Link to="/">Browse resources</Link>
         </Card>
@@ -61,7 +88,7 @@ export default function RequestListPage({ review = false }) {
         <div className="request-table">
           <table>
             <caption className="sr-only">
-              {review ? "Pending reviews" : "Your access requests"}
+              {review ? "Learner requests" : "Your access requests"}
             </caption>
             <thead>
               <tr>
@@ -107,10 +134,13 @@ export default function RequestListPage({ review = false }) {
                       className="text-action"
                       to={`/requests/${item.id}`}
                       state={{
-                        back: `${review ? "/review" : "/requests"}?page=${page}`,
+                        back: `${review ? "/review" : "/requests"}?status=${status}&page=${page}`,
                       }}
                     >
-                      {review ? "Review request" : "View details"} →
+                      {review && item.status === "pending"
+                        ? "Review request"
+                        : "View details"}{" "}
+                      →
                     </Link>
                   </td>
                 </tr>
@@ -125,15 +155,17 @@ export default function RequestListPage({ review = false }) {
           <Button
             variant="outline"
             disabled={page === 1 || loading}
-            onClick={() => setParams({ page: String(page - 1) })}
+            onClick={() => setParams({ status, page: String(page - 1) })}
           >
             Previous
           </Button>
-          <span>Page {page}</span>
+          <span>
+            Page {page} of {Math.max(1, data.pagination.totalPages)}
+          </span>
           <Button
             variant="outline"
             disabled={page >= data.pagination.totalPages || loading}
-            onClick={() => setParams({ page: String(page + 1) })}
+            onClick={() => setParams({ status, page: String(page + 1) })}
           >
             Next
           </Button>

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { loadAllMine, requestApi } from "./requests.api";
-export function useRequests(kind, value) {
+export function useRequests(kind, value, status) {
+  const key = JSON.stringify([kind, value, status]);
   const [state, setState] = useState({
+    key,
     loading: true,
     data: null,
     error: null,
@@ -9,7 +11,7 @@ export function useRequests(kind, value) {
   const [version, setVersion] = useState(0);
   useEffect(() => {
     let current = true;
-    setState({ loading: true, data: null, error: null });
+    setState({ key, loading: true, data: null, error: null });
     const read =
       kind === "catalog"
         ? value
@@ -17,17 +19,20 @@ export function useRequests(kind, value) {
           : Promise.resolve([])
         : kind === "detail"
           ? requestApi.detail(value)
-          : requestApi.list(kind === "review", value);
+          : requestApi.list(kind === "review", value, status);
     read
       .then((data) => {
-        if (current) setState({ loading: false, data, error: null });
+        if (current) setState({ key, loading: false, data, error: null });
       })
       .catch((error) => {
-        if (current) setState({ loading: false, data: null, error });
+        if (current) setState({ key, loading: false, data: null, error });
       });
     return () => {
       current = false;
     };
-  }, [kind, value, version]);
-  return { ...state, refresh: () => setVersion((previous) => previous + 1) };
+  }, [kind, value, status, key, version]);
+  return {
+    ...(state.key === key ? state : { loading: true, data: null, error: null }),
+    refresh: () => setVersion((previous) => previous + 1),
+  };
 }

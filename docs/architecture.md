@@ -37,7 +37,7 @@ Requests now own an AccessRequest schema, controllers, routes, and one transitio
 
 The transition table defines cancel/resubmit for the owning learner and approve/reject for reviewers. A read establishes visibility and the allowed previous state; the write still conditions on ID, ownership where applicable, status, and the submitted revision. A single MongoDB update sets the new state, increments revision, and appends its event. Resubmission clears the current decision reason, updates reason/submittedAt, and preserves previous events. Approved is terminal. Requests read public user/resource summaries through small owning-module service exports rather than querying other feature models or using unrestricted population.
 
-The API workflow is verified, including a real startup subprocess against disposable mongod. Phase 4 connects the request dialog, queue, lists, details/history, conflict recovery, and uncertain-write reconciliation. Learner cancellation/resubmission and status filters remain Phase 5.
+The API workflow is verified, including a real startup subprocess against disposable mongod. Phase 4 connects the request dialog, queue, lists, details/history, conflict recovery, and uncertain-write reconciliation. Phase 5 now connects learner cancellation/resubmission and status filters.
 
 ## Phase 4 browser workflow
 
@@ -46,3 +46,13 @@ AppShell shares authenticated navigation across catalog, lists, and details. Ses
 Request dialogs and decisions use controlled fields and a synchronous busy guard. Decision confirmation sends the displayed revision. A conflict refreshes saved state and requires a new action. The client issues each mutation once; network/server/unreadable-response failures trigger a saved-state read. A matching creation or matching next revision/status/reason/reviewer event confirms persistence. An unchanged pending request or absent creation permits a deliberate retry with retained text. Unavailable reconciliation blocks another write until the user can check saved state. Server uniqueness/revision conditions also protect against transport-level replay.
 
 Timeline actor names are safe current-name projections; immutable actor IDs and events remain stored on the request. Shared dates use Asia/Kolkata and an explicit IST suffix. Guarded routes resolve sessions before rendering and show role-aware access-denied/not-found states. None of these presentation checks replace server authorization.
+
+## Phase 5 learner actions and lists
+
+LearnerActions supplies confirmed pending cancellation and controlled resubmission on rejected/cancelled details. Approved remains read-only for both roles. Cancelled context names the learner action rather than inventing reviewer feedback; rejection feedback remains separate from the current reason and preserved timeline. Unavailable resources disable resubmission; the API rechecks availability and permissions.
+
+Actions send the current revision once and reuse saved-state reconciliation. Recovery verifies the next revision, status, final action/actor, and updated resubmission reason/cleared decision. Unknown state blocks another action; unchanged saved state permits a deliberate retry with retained text. Server conflicts refresh details before a new choice.
+
+Lists store status/page in query parameters, defaulting to all for learners and pending for reviewers. Filter changes reset to page one; an out-of-range page clamps to the last available page, or one for empty results. Details/back retains the list query. The server retains latest-first learner ordering and oldest-first pending reviews. Hook results carry their query identity, so prior filter/page data cannot clamp the new query or briefly render old rows as a new result.
+
+If a protected mutation fails CSRF validation, the client clears its token and reads the current session. An expired session opens sign-in with a clear message; a still-authenticated session keeps the original error for a deliberate action. The rejected mutation is never replayed automatically.

@@ -11,6 +11,7 @@ import { formatDate } from "@/lib/dates";
 import { useRequests } from "./useRequests";
 import { RequestTimeline } from "./RequestTimeline";
 import { DecisionPanel } from "./DecisionPanel";
+import { LearnerActions } from "./LearnerActions";
 import { StatusBadge } from "./StatusBadge";
 export default function RequestDetailPage() {
   const { id } = useParams(),
@@ -94,6 +95,26 @@ export default function RequestDetailPage() {
                     <p>This resource is no longer available.</p>
                   )}
                 </Card>
+                {["rejected", "cancelled"].includes(item.status) && (
+                  <Card className="workflow-panel request-feedback">
+                    <h2>
+                      {item.status === "rejected"
+                        ? "Reviewer feedback"
+                        : "Cancellation context"}
+                    </h2>
+                    <p className="preserved-text">
+                      {item.status === "rejected"
+                        ? item.decisionReason
+                        : user.role === "learner"
+                          ? "You cancelled this request. You can update the reason and resubmit."
+                          : "The learner cancelled this request and can resubmit later."}
+                    </p>
+                    <p className="auth-hint">
+                      {item.history.at(-1)?.actorName ?? "Account unavailable"}{" "}
+                      · {formatDate(item.history.at(-1).at)}
+                    </p>
+                  </Card>
+                )}
                 <Card className="workflow-panel">
                   <RequestTimeline request={item} />
                 </Card>
@@ -107,6 +128,27 @@ export default function RequestDetailPage() {
                       reconciled
                         ? "Saved decision found and verified."
                         : "Decision saved.",
+                    );
+                    refresh();
+                  }}
+                  onConflict={() => {
+                    setNotice(
+                      "This request changed. The saved state has been refreshed. Review it before choosing another action.",
+                    );
+                    refresh();
+                  }}
+                />
+              ) : user.role === "learner" && item.status !== "approved" ? (
+                <LearnerActions
+                  key={`${item.id}-${item.revision}`}
+                  request={item}
+                  onSaved={(record, reconciled) => {
+                    setNotice(
+                      reconciled
+                        ? "Saved change found and verified."
+                        : record.status === "cancelled"
+                          ? "Request cancelled."
+                          : "Request resubmitted. Your reviewer can now see it.",
                     );
                     refresh();
                   }}

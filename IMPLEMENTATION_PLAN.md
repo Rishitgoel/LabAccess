@@ -327,23 +327,25 @@ October 8 evidence: [verification ledger](docs/verification.md#phase-4--browser-
 
 ### Tasks
 
-- [ ] Add pending cancellation with confirmation.
-- [ ] Add rejected/cancelled resubmission with an updated reason and preserved history.
-- [ ] Add all required status filters and pagination, including empty filtered results.
-- [ ] Reset the page appropriately when filters change or a mutation removes the last row.
-- [ ] Keep latest-first ordering for learner requests and oldest-first ordering for pending reviews.
-- [ ] Distinguish approved, pending, rejected, and cancelled catalog states.
-- [ ] Include eligibility guidance; show read-only resource controls to reviewers.
-- [ ] Show dates in one explicit, documented format/timezone consistently across lists/history.
-- [ ] Ensure inaccessible/missing requests, expired sessions, and server errors each have useful feedback.
-- [ ] Preserve filters during details/back navigation where practical.
+- [x] Add pending cancellation with confirmation.
+- [x] Add rejected/cancelled resubmission with an updated reason and preserved history.
+- [x] Add all required status filters and pagination, including empty filtered results.
+- [x] Reset the page appropriately when filters change or a mutation removes the last row.
+- [x] Keep latest-first ordering for learner requests and oldest-first ordering for pending reviews.
+- [x] Distinguish approved, pending, rejected, and cancelled catalog states.
+- [x] Include eligibility guidance; show read-only resource controls to reviewers.
+- [x] Show dates in one explicit, documented format/timezone consistently across lists/history.
+- [x] Ensure inaccessible/missing requests, expired sessions, and server errors each have useful feedback.
+- [x] Preserve filters during details/back navigation where practical.
 
 ### Exit gate
 
-- [ ] Cancel → resubmit → reject → resubmit → approve works on one document with a complete history.
-- [ ] Status filters/pagination do not expose other learners or lose request rows.
-- [ ] Terminal approved state is respected by UI and API.
-- [ ] Every advertised must-have is implemented before optional functionality.
+- [x] Cancel → resubmit → reject → resubmit → approve works on one document with a complete history.
+- [x] Status filters/pagination do not expose other learners or lose request rows.
+- [x] Terminal approved state is respected by UI and API.
+- [x] Every advertised must-have is implemented before optional functionality.
+
+October 8 evidence: [verification ledger](docs/verification.md#phase-5--complete-core-workflow-october-8-2026). The full six-event browser lifecycle, 21-row pagination, both-role last-row recovery, owner isolation, and lost-response/session recovery passed locally. Functional core gates are complete; genuine Kiro evidence and release acceptance remain open.
 
 **Suggested commit:** `feat: complete cancellation resubmission and request filtering`.
 
@@ -523,8 +525,8 @@ Keep one short tracker, rather than duplicating status across documents:
 | 1 | Verified complete | Phase 1 UI commit; docs/verification.md | Preserved at /preview |
 | 2 | Verified complete | Phase 2 auth/data commit; docs/verification.md | Auth retained and regression-tested |
 | 3 | Verified complete | Phase 3 workflow commit; docs/verification.md | Backend retained and regression-tested |
-| 4 | Verified complete | Phase 4 browser workflow commit; docs/verification.md | Phase 5 learner actions and filters |
-| 5 | Not started | — | Remaining core behavior |
+| 4 | Verified complete | Phase 4 browser workflow commit; docs/verification.md | Browser flow retained and regression-tested |
+| 5 | Verified complete | Phase 5 core workflow commit; docs/verification.md | Phase 6 responsive/accessibility/motion finish |
 | 6 | Not started | — | Responsive/motion finish |
 | 7 | Not started | — | Integrated validation |
 | 8 | Not started | — | Documentation/fresh clone |
