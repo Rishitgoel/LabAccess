@@ -100,6 +100,14 @@ test("configuration rejects invalid port and connection timeout", () => {
   );
 });
 
+test("proxy trust defaults off and only permits the explicit loopback topology", () => {
+  assert.equal(readConfig({}).trustProxy, false);
+  assert.equal(readConfig({ TRUST_PROXY: "false" }).trustProxy, false);
+  assert.equal(readConfig({ TRUST_PROXY: "loopback" }).trustProxy, "loopback");
+  for (const value of ["true", "1", "uniquelocal", "0.0.0.0/0"])
+    assert.throws(() => readConfig({ TRUST_PROXY: value }), /TRUST_PROXY/);
+});
+
 test("missing and unreachable MongoDB produce clear errors without exposing URI", async () => {
   await assert.rejects(
     connectDatabase(readConfig({})),

@@ -1,0 +1,29 @@
+{
+  "environment": "Local NODE_ENV=production server 3003 behind HTTPS loopback proxy 3443; test CA explicitly trusted only by API client",
+  "checks": [
+    "Verified certificate, built assets and SPA deep links, readiness and no-store",
+    "Three accounts: Secure HttpOnly SameSite=Lax cookies, session rotation",
+    "CSRF missing token and cross-site rejected; roles and neutral ownership 404",
+    "19/1001 rejection and 1000 Unicode code-point acceptance; decision 9/501 rejection",
+    "Duplicate conflict and lifecycle submit/cancel/resubmit/reject/resubmit/final decision",
+    "Concurrent approved/rejected: exactly one 200 and one 409; MongoDB revision 5 and six events",
+    "Inactive resource rejected; replay after logout and stored expiry both 401"
+  ],
+  "request": {
+    "id": "6ac7d46656ef6785efd82c1f",
+    "revision": 5,
+    "actions": [
+      "submit",
+      "cancel",
+      "resubmit",
+      "reject",
+      "resubmit",
+      "approve"
+    ]
+  },
+  "limits": [
+    "Self-signed certificate not installed in OS/browser",
+    "Public HTTPS and production browser workflow not claimed",
+    "Initial inactive-resource fixture used wrong field active; corrected to isActive and repeated on unused resource"
+  ]
+}

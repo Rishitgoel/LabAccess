@@ -2,7 +2,7 @@
 
 **Version:** 1.1  
 **Planning date:** October 8, 2026  
-**Status:** Phases 1–5 verified locally; Phase 6 implementation and reduced-motion checks verified. Full-motion visual acceptance, genuine Kiro evidence, and release phases remain open.
+**Status:** Phases 1–5 and Phase 7 verified locally; Phase 6 implementation and reduced-motion checks verified. Full-motion visual acceptance, genuine Kiro evidence, fresh clone, and hosting/submission remain open.
 **Requirements:** [PRD.md](PRD.md)  
 **Visual specification:** [DESIGN.md](DESIGN.md)  
 **Selected reference:** [sample-ui.png](sample-ui.png)  
@@ -390,29 +390,31 @@ October 8 evidence: [verification ledger](docs/verification.md#phase-6--responsi
 
 ### Tasks
 
-- [ ] Run the critical tests after final frontend/backend integration.
-- [ ] Exercise browser journeys with two learners and one reviewer; include logout/refresh and direct URLs.
-- [ ] Test field boundaries, invalid resource IDs, expired sessions, inactive resources, empty filters, and pagination.
-- [ ] Test slow/failed reads and uncertain writes; ensure stale decisions never silently overwrite new state.
-- [ ] Test database-unavailable startup/readiness behavior; no success response when persistence fails.
-- [ ] Build the production React application and run it through the intended production server topology.
-- [ ] Verify cookie/CSRF settings under that topology; account for trusted proxies only when configured and needed.
-- [ ] Check unexpected errors for stack traces/secrets and check tracked files for committed credentials.
-- [ ] Resolve meaningful dependency/security findings relevant to the installed versions; record unresolved limits honestly.
-- [ ] Record actual command outcomes, environment, and evidence in docs/verification.md.
+- [x] Run the critical tests after final frontend/backend integration.
+- [x] Exercise browser journeys with two learners and one reviewer; include logout/refresh and direct URLs.
+- [x] Test field boundaries, invalid resource IDs, expired sessions, inactive resources, empty filters, and pagination.
+- [x] Test slow/failed reads and uncertain writes; ensure stale decisions never silently overwrite new state.
+- [x] Test database-unavailable startup/readiness behavior; no success response when persistence fails.
+- [x] Build the production React application and run it through the intended production server topology.
+- [x] Verify cookie/CSRF settings under that topology; account for trusted proxies only when configured and needed.
+- [x] Check unexpected errors for stack traces/secrets and check tracked files for committed credentials.
+- [x] Resolve meaningful dependency/security findings relevant to the installed versions; record unresolved limits honestly.
+- [x] Record actual command outcomes, environment, and evidence in docs/verification.md.
 
 ### Verification ledger
 
 | Check | Result | Evidence | Open issue |
 |---|---|---|---|
-| Real-Mongo API integration | Pending | — | — |
-| Authorization and session tests | Pending | — | — |
-| Concurrent transition tests | Pending | — | — |
-| Learner/reviewer browser flow | Pending | — | — |
-| Mobile/keyboard/reduced motion | Pending | — | — |
-| Production build/run | Pending | — | — |
-| Fresh clone | Pending | — | — |
+| Real-Mongo API integration | Passed | 40 backend checks; independent stored history reads | Isolated local MongoDB |
+| Authorization and session tests | Passed | Roles, ownership, CSRF, expiry, production Secure cookie regression | Public HTTPS browser pending |
+| Concurrent transition tests | Passed | Final suite and TLS decision race: 200/409, one event | — |
+| Learner/reviewer browser flow | Passed locally | Two learners, reviewer; six events, 22-row pagination, stale/fault recovery | — |
+| Mobile/keyboard/reduced motion | Passed within scope | Final 1440/375 captures, keyboard confirmations; Phase 6 matrix retained | Full-motion walkthrough open |
+| Production build/run | Passed locally | Build; actual production HTTPS proxy/API and assets/deep links | Hosted browser flow open |
+| Fresh clone | Deferred to Phase 8 | Literal README clean checkout acceptance | Open |
 | Hosted workflow, if provided | Not attempted | — | Optional |
+
+Evidence and limitations: [docs/verification.md](docs/verification.md#phase-7--final-integration-and-release-correctness-october-8-2026). Phase 7 exit gate passes locally; earlier full-motion/Kiro and later fresh-clone/hosting gates remain open.
 
 Do not translate local success into hosted success. Re-run only checks affected by repairs or unresolved concerns.
 
@@ -528,9 +530,9 @@ Keep one short tracker, rather than duplicating status across documents:
 | 2 | Verified complete | Phase 2 auth/data commit; docs/verification.md | Auth retained and regression-tested |
 | 3 | Verified complete | Phase 3 workflow commit; docs/verification.md | Backend retained and regression-tested |
 | 4 | Verified complete | Phase 4 browser workflow commit; docs/verification.md | Browser flow retained and regression-tested |
-| 5 | Verified complete | Phase 5 core workflow commit; docs/verification.md | Phase 6 responsive/accessibility/motion finish |
-| 6 | Not started | — | Responsive/motion finish |
-| 7 | Not started | — | Integrated validation |
+| 5 | Verified complete | Phase 5 core workflow commit; docs/verification.md | Core workflow retained and regression-tested |
+| 6 | Implemented but unverified in full | 43081be; responsive/a11y/reduced-motion evidence | Full-motion subjective walkthrough remains open |
+| 7 | Verified complete locally | docs/verification.md and phase7 checks/screenshots | Phase 8 documentation/fresh clone |
 | 8 | Not started | — | Documentation/fresh clone |
 | 9 | Not started | — | Public review/submission |
 | 10 | Reserved | — | Critical recovery only |

@@ -10,6 +10,7 @@ import { User } from "../src/modules/auth/user.model.js";
 import { Resource } from "../src/modules/resources/resource.model.js";
 import { seedData, validateSeed } from "../src/scripts/seed-data.js";
 let mongo, app, config;
+const extraStores = [];
 const password = " Synthetic Password 123 ";
 const origin = "http://127.0.0.1:5173";
 before(async () => {
@@ -27,6 +28,7 @@ before(async () => {
   app = createApp({ config });
 });
 after(async () => {
+  for (const store of extraStores) await store.close();
   await app?.locals.sessionStore.close();
   await disconnectDatabase();
   await mongo?.stop();
@@ -313,6 +315,44 @@ test("authentication attempts are bounded and return retry guidance", async () =
       .expect(429);
     assert.ok(Number(response.headers["retry-after"]) > 0);
   } finally {
-    await limited.locals.sessionStore.close();
+    extraStores.push(limited.locals.sessionStore);
+  }
+});
+
+test("production cookies require an explicitly trusted loopback TLS proxy", async () => {
+  const productionConfig = readConfig({
+    NODE_ENV: "production",
+    APP_ORIGIN: "https://labaccess.test",
+    SESSION_SECRET: config.sessionSecret,
+    TRUST_PROXY: "loopback",
+  });
+  const proxied = createApp({ config: productionConfig });
+  try {
+    const forwarded = await request(proxied)
+      .get("/api/auth/csrf")
+      .set("X-Forwarded-Proto", "https")
+      .expect(200);
+    assert.match(forwarded.headers["set-cookie"]?.[0] ?? "", /; Secure;/);
+    assert.match(
+      forwarded.headers["set-cookie"][0],
+      /HttpOnly; Secure; SameSite=Lax/,
+    );
+    const plain = await request(proxied).get("/api/auth/csrf").expect(200);
+    assert.equal(plain.headers["set-cookie"], undefined);
+    assert.equal(proxied.get("trust proxy fn")("203.0.113.9", 0), false);
+  } finally {
+    extraStores.push(proxied.locals.sessionStore);
+  }
+  const untrusted = createApp({
+    config: { ...productionConfig, trustProxy: false },
+  });
+  try {
+    const response = await request(untrusted)
+      .get("/api/auth/csrf")
+      .set("X-Forwarded-Proto", "https")
+      .expect(200);
+    assert.equal(response.headers["set-cookie"], undefined);
+  } finally {
+    extraStores.push(untrusted.locals.sessionStore);
   }
 });

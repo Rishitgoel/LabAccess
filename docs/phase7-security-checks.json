@@ -1,0 +1,13 @@
+{
+  "scope": "Tracked files and all reachable Git revisions; PEM private keys, common provider credential prefixes and MongoDB URIs containing passwords",
+  "trackedFiles": 226,
+  "commits": 8,
+  "scannedTextBlobs": 514,
+  "forbiddenTrackedPaths": [],
+  "credentialFindings": [],
+  "limit": "Pattern scan is scoped evidence; synthetic fixture secrets and public demo passwords are intentional. Does not prove absence of every possible secret.",
+  "npmAudit": {
+    "total": 0,
+    "dependencies": 366
+  }
+}

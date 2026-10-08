@@ -1,0 +1,56 @@
+{
+  "environment": "Built client served by Express on 3002, isolated synthetic MongoDB; fault gateway on 5186",
+  "lifecycleUrl": "http://127.0.0.1:3002/requests/6ac7d4b0a9481ca9f1c44ea7",
+  "checks": [
+    "Learner submit/cancel/resubmit, reviewer reject, learner resubmit, reviewer approve; direct URL and reload retain six events",
+    "Logout/login role switching; second learner All and Approved empty, owner detail neutral 404, reviewer route access denied",
+    "Both roles All pagination 22 requests as 20 + 2; learner detail/back retains status=all&page=2",
+    "Failed detail read Try again recovers; uncertain resubmit preserves draft and blocks repetition; Check saved state enables deliberate retry",
+    "Truncated successful resubmit recovered by saved-state read; gateway recorded one upstream POST",
+    "Five-second decision refresh retains history/context and removes actions for Updating saved state; final approved has no transition controls",
+    "Separate reviewer API session rejected a pending fixture; stale browser approval refreshed rejected state and feedback",
+    "Cancellation starts focus on Keep request; decision starts on Go back; keyboard Enter saves confirmed rejection"
+  ],
+  "responsive": [
+    {
+      "events": 6,
+      "overflow": false,
+      "reducedMotion": true,
+      "transitionButtons": [],
+      "width": 1440
+    },
+    {
+      "events": 6,
+      "overflow": false,
+      "reducedMotion": true,
+      "transitionButtons": [],
+      "width": 375
+    }
+  ],
+  "consoleErrorsWarnings": [],
+  "limits": [
+    "Production browser HTTPS not attempted because self-signed certificate is not trusted by browser",
+    "Full-motion subjective acceptance remains open; native reduced-motion preference true"
+  ],
+  "database": {
+    "requestCount": 22,
+    "lifecycle": {
+      "revision": 5,
+      "actions": [
+        "submit",
+        "cancel",
+        "resubmit",
+        "reject",
+        "resubmit",
+        "approve"
+      ]
+    },
+    "stale": {
+      "revision": 1,
+      "actions": [
+        "submit",
+        "reject"
+      ]
+    }
+  }
+}

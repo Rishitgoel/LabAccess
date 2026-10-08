@@ -55,11 +55,11 @@ npm run build
 npm audit
 ```
 
-The 54 checks cover authentication, workflow correctness, and client recovery: real unique indexes, ownership, races, revisions/history, validation, projections, filter/page contracts, complete catalog status reads, write reconciliation, and expired-CSRF recovery without replay. A real server child process verifies startup and a persisted API journey. Tests use isolated disposable MongoDB databases and never delete development data. Browser checks cover cancel → resubmit → reject → resubmit → approve, all six persisted events, 21-row pagination, last-row page recovery, account isolation, stale decisions, failed reads/writes, and lost responses. See [verification](docs/verification.md).
+The 56 checks cover authentication, workflow correctness, and client recovery: real unique indexes, ownership, races, revisions/history, validation, projections, filter/page contracts, complete catalog status reads, write reconciliation, expired-CSRF recovery without replay, and explicit production proxy trust. A real server child process verifies startup and a persisted API journey. Tests use isolated disposable MongoDB databases and never delete development data. Final browser checks cover cancel → resubmit → reject → resubmit → approve, all six persisted events, 22-row pagination, account isolation, stale decisions, failed reads/writes, and lost responses. Earlier checks also cover last-row page recovery. See [verification](docs/verification.md).
 
 For a local same-origin built-client check, run `npm start` after building while retaining development settings; open `http://127.0.0.1:3001` and set `APP_ORIGIN` to that exact origin first. Restore the Vite origin when returning to `npm run dev`.
 
-Production requires `NODE_ENV=production`, an HTTPS `APP_ORIGIN`, a strong `SESSION_SECRET`, MongoDB, and a built client. Cookies are Secure in production. TLS termination, public binding, and narrowly scoped trust-proxy configuration must be established and verified during hosting; the current server listens on loopback and trusts no proxy. Plain HTTP is insufficient for production login. Public HTTPS deployment has not been verified.
+Production requires `NODE_ENV=production`, an HTTPS `APP_ORIGIN`, a strong `SESSION_SECRET`, MongoDB, and a built client. Cookies are Secure in production. The server listens on loopback; set `TRUST_PROXY=loopback` only behind a same-host TLS proxy that overwrites `X-Forwarded-For`, `X-Forwarded-Host`, and `X-Forwarded-Proto`. Proxy trust defaults to `false`; broader trust settings are rejected. Keep the backend isolated from public access and set `APP_ORIGIN` to the exact external HTTPS origin. Plain HTTP is insufficient for production login. The local HTTPS proxy/API topology was verified with an explicitly trusted test CA; public HTTPS and a production browser workflow remain unverified.
 
 ## Environment
 
@@ -72,6 +72,7 @@ Production requires `NODE_ENV=production`, an HTTPS `APP_ORIGIN`, a strong `SESS
 | SESSION_SECRET | Required random secret, at least 32 characters |
 | SESSION_MAX_AGE_MS | Rolling idle lifetime, default 8 hours; 1 minute–7 days |
 | APP_ORIGIN | Exact allowed mutation origin; HTTPS in production |
+| TRUST_PROXY | `false` (default), or `loopback` for a same-host TLS proxy overwriting forwarded headers |
 | SEED_DEMO_PASSWORD | Synthetic demo password, 12–128 characters |
 
 Health and configured feature routes return **503** when database readiness fails. An initial connection/index failure requires a server restart after fixing MongoDB. A later outage hides private content on session bootstrap; retry recovers after the established connection reconnects. API errors omit credentials, hashes, and session internals.

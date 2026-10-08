@@ -11,6 +11,9 @@ export function readConfig(env = process.env) {
   if (!["development", "test", "production"].includes(nodeEnv)) {
     throw new Error("NODE_ENV must be development, test, or production.");
   }
+  if (![undefined, "", "false", "loopback"].includes(env.TRUST_PROXY)) {
+    throw new Error("TRUST_PROXY must be false or loopback.");
+  }
   let appOrigin;
   try {
     const url = new URL(env.APP_ORIGIN ?? "http://127.0.0.1:5173");
@@ -31,6 +34,7 @@ export function readConfig(env = process.env) {
   }
   return {
     nodeEnv,
+    trustProxy: env.TRUST_PROXY === "loopback" ? "loopback" : false,
     port: integer(env.PORT, 3001, 1, 65535, "PORT"),
     mongodbUri: env.MONGODB_URI,
     appOrigin,

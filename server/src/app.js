@@ -19,6 +19,7 @@ export function createApp({
 } = {}) {
   const app = express();
   app.disable("x-powered-by");
+  app.set("trust proxy", config?.trustProxy ?? false);
   app.use(express.json({ limit: "16kb" }));
   app.get("/api/health", (_req, res) => {
     res.set("Cache-Control", "no-store");
