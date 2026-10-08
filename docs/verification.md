@@ -23,3 +23,7 @@ The first sandboxed HTTP test run hit EACCES connecting to its own localhost lis
 The setup screen is diagnostic, not a completed Phase 1 UI. No database-backed workflow, auth/session, concurrency, hosted demo, fresh clone, or full responsive/keyboard acceptance has been verified. Keep their later-phase gates open.
 
 Actual rendered diagnostic screenshot: [phase0-setup.png](screenshots/phase0-setup.png). Warm theme and visible failure/retry checked; this is not a catalog visual comparison or a full breakpoint acceptance claim.
+
+## GitHub setup — October 8, 2026
+
+User explicitly requested GitHub setup and push. Created public [Rishitgoel/LabAccess](https://github.com/Rishitgoel/LabAccess), set local branch to main, configured origin over HTTPS, and pushed the Phase 0 foundation commit 7adc9e9 with upstream tracking. GitHub reports isPrivate=false and default branch main. Reviewed the complete initial tracked file list and credential-pattern scan before publishing; actual env files, dependencies, and build output are excluded. This publishes an in-progress project, not a completed assessment or email submission.
