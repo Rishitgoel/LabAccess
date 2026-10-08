@@ -2,7 +2,7 @@
 
 A MERN learning-resource request and review application. Approval records a decision; it does not provision external access.
 
-**Current state: Phase 2 verified locally.** Registration, login/logout, MongoDB sessions, role guards, CSRF protection, and the database-backed resource catalog are implemented. Request submission, review, and history arrive in Phases 3–5. The normal app uses MongoDB; `/preview` preserves the Phase 1 fixture demonstration and clearly labels its unsaved behavior.
+**Current state: Phase 3 backend verified locally.** Registration, sessions, role guards, CSRF protection, and the database-backed catalog are implemented. Request creation, owner lists/details, cancellation, resubmission, reviewer queues/decisions, and history now work through the API. Ownership, duplicates, revisions, and concurrent transitions are tested against real MongoDB. Connecting this workflow to the browser is Phase 4; the live catalog still omits request actions. `/preview` remains an explicitly unsaved design demonstration.
 
 ![Registration](docs/screenshots/phase2-registration-desktop.png)
 
@@ -55,7 +55,7 @@ npm run build
 npm audit
 ```
 
-The 19 checks include real MongoDB indexes, concurrent normalized-email registration, cookie/session expiry, regeneration/logout replay, trusted role changes, CSRF/origin rejection, resource pagination, rate limiting, seed guards, and unavailable-database recovery boundaries. Integration tests launch an isolated disposable database and never delete the development database. Browser evidence covers proxy login/registration, refresh, logout, learner/reviewer routes, database restart recovery, and 1440/768/375px layouts. See [verification](docs/verification.md).
+The 38 checks cover authentication and the workflow: real unique indexes, duplicate submissions, owner/role isolation, terminal approvals, competing decisions/cancellations/resubmissions, stale revisions after returning to pending, full history preservation, validation, safe response projections, filtering, and stable pagination. A real server child process verifies startup index creation and a persisted learner/reviewer API journey. Tests use isolated disposable MongoDB databases and never delete development data. Existing Phase 2 browser evidence covers login/registration, refresh/logout, routes, database recovery, and responsive layouts; the request browser journey remains Phase 4. See [verification](docs/verification.md).
 
 For a local same-origin built-client check, run `npm start` after building while retaining development settings; open `http://127.0.0.1:3001` and set `APP_ORIGIN` to that exact origin first. Restore the Vite origin when returning to `npm run dev`.
 
@@ -82,6 +82,6 @@ React 19, Vite 8, Tailwind 4, shadcn/Radix, Motion, Lucide, locally bundled font
 
 ## AI development and outstanding gates
 
-Codex implemented the foundations and Phases 1–2. Kiro is recommended but **has not yet been used**. The email's `app.kiro.de` differs from official `kiro.dev`; assessment-tool identity is unresolved. Phase 0 remains open for identity clarification and a genuine named-tool task. [AI usage](docs/ai-usage.md) contains the prepared task; no 3–5-task claim is made.
+Codex implemented the foundations and Phases 1–3. Kiro is recommended but **has not yet been used**. The email's `app.kiro.de` differs from official `kiro.dev`; assessment-tool identity is unresolved. Phase 0 remains open for identity clarification and a genuine named-tool task. [AI usage](docs/ai-usage.md) contains the prepared task; no 3–5-task claim is made.
 
 [Implementation tracker](IMPLEMENTATION_PLAN.md#17-daily-progress-tracking), [UI reference guide](docs/UI_REFERENCE_GUIDE.md), and [public repository](https://github.com/Rishitgoel/LabAccess). Concept images are not implementation screenshots. Assessment submission has not been emailed.

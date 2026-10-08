@@ -1,6 +1,6 @@
 # LabAccess API contract
 
-Updated October 8, 2026: health, all auth routes, and GET resources are implemented in Phase 2. Request/review endpoints remain contracts for Phases 3–5; the `/api/review` namespace enforces authentication and reviewer role, then returns 404 for unimplemented routes. JSON bodies are limited to 16 KiB. Production serves the React build and `/api` from the same origin; development uses Vite's `/api` proxy.
+Updated October 8, 2026: all routes listed below are implemented through Phase 3, including request creation, owner lists/details, cancellation, resubmission, review lists, and decisions. Phase 4 will connect their browser interfaces. JSON bodies are limited to 16 KiB. Production serves the React build and `/api` from the same origin; development uses Vite's `/api` proxy.
 
 ## Envelopes and errors
 
@@ -20,13 +20,13 @@ Success: `{ "data": ... }`. List success: `{ "data": [], "pagination": { "page":
 | 500 | `INTERNAL_ERROR` |
 | 503 | `DATABASE_UNAVAILABLE` |
 
-`GET /api/health` returns `{ "data": { "status": "ready", "database": "connected" } }` only when the database connection is ready, otherwise a 503 error. Health responses use `Cache-Control: no-store`. Future authenticated responses will also use no-store.
+`GET /api/health` returns `{ "data": { "status": "ready", "database": "connected" } }` only after connection and required index initialization, otherwise a 503 error. All API responses use `Cache-Control: no-store` in the configured application.
 
 ## Validation
 
 - HTTP IDs are 24-character hexadecimal MongoDB ObjectId strings. Malformed IDs return 400 before a database query; well-formed unavailable IDs return 404.
 - Count text lengths as Unicode code points. Trim names/reasons before checks. Name: 2–80 characters. Email: trim, lowercase, validate, maximum 254 characters; unique normalized index.
-- Password: 12–128 characters, preserved exactly, including spaces. Never trim, lowercase, echo, or log passwords. Phase 2 will use Argon2id via an established implementation, avoiding bcrypt's silent byte truncation.
+- Password: 12–128 characters, preserved exactly, including spaces. Never trim, lowercase, echo, or log passwords. Phase 2 uses Argon2id via an established implementation, avoiding bcrypt's silent byte truncation.
 - Request reason: 20–1,000 trimmed characters. Decision reason: 10–500. Reject empty/non-string values. Client validation supplements server validation.
 - Reject unknown body/query fields. Server supplies actor, owner, status, timestamps, history, and role; registration accepts only name/email/password. Reject role assignment with 400.
 - Revision is a required non-negative safe integer for each transition. Creation starts at revision 0. Each successful transition increments it once.
@@ -69,4 +69,8 @@ Use a synchronizer CSRF token stored in the session. Bootstrap via GET `/auth/cs
 
 One unique learner/resource document. Creation derives owner from the session and rejects inactive/missing resources. Updates condition on ID, owner where relevant, allowed current status, and expected revision; modify state, append history, and increment revision in one MongoDB operation. Resubmission updates submittedAt and reason, clears current decisionReason, preserves old event reasons, and rechecks resource availability. Approved is terminal.
 
-Check visibility before classifying a failed conditional update: 404 for a hidden/missing request; 409 for a visible stale/conflicting request. Failed writes never append events. On 409 the UI refreshes and requires another deliberate action. On an uncertain write response, read saved state before permitting a repeat. Approval records a decision only; it does not provision external access.
+Check visibility before classifying a failed conditional update: 404 for a hidden/missing request; 409 for a visible stale/conflicting request. Failed writes never append events. On 409 the Phase 4 UI must refresh and require another deliberate action. On an uncertain write response, read saved state before permitting a repeat. Approval records a decision only; it does not provision external access.
+
+Implemented history actions are `submit`, `cancel`, `resubmit`, `approve`, and `reject`. Submission records its request reason; cancellation records the current request reason; resubmission records its new reason; decisions record their decision reason. Event `at` matches the transition's server-generated `updatedAt`; resubmission also sets `submittedAt` to that time. All prior events remain. Current `decisionReason` is null until a decision and becomes null again on resubmission.
+
+Request DTOs contain only the fields above, plus `resource` with the six public resource fields and `learner` with `id,name,email,role`. These summaries are explicit projections fetched through their owning feature services; password hashes and session fields cannot be populated accidentally. A removed related record yields a null summary while preserving stored IDs/history. Detail/transition/create endpoints accept no query fields. Learner `/requests/mine` defaults to all statuses; `/review/requests` defaults to pending.

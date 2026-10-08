@@ -83,3 +83,30 @@ Verification found and fixed eager Mongoose model initialization before connecti
 Docker's engine was unavailable, so development/testing used a genuine local MongoDB binary through mongodb-memory-server. Development data resides in ignored .local/mongodb; tests use a distinct disposable database. No MongoDB system service was installed. Actual .env and database files remain ignored. Phase 2 is verified locally; request state transitions, workflow ownership/concurrency, full browser request/review/history, public hosting, and assessment submission remain unimplemented later-phase gates.
 
 A final seed regression check compared entire pre-existing documents while changing SEED_DEMO_PASSWORD. It exposed Mongoose's automatic updatedAt modification on repeat upserts. Seed now disables update timestamps and supplies timestamps only on insertion; the regression passes and repeat seeding preserves complete documents, including password hashes and timestamps. The final suite remains 19/19.
+
+## Phase 3 — workflow backend, October 8, 2026
+
+Implemented AccessRequest with immutable owner/resource references, status, reason, submittedAt, decisionReason, revision, timestamps, and embedded history. Added controller validation, owner/request routes, reviewer routes, and one explicit transition table/service. Startup creates the unique learner/resource index and stable list indexes before readiness succeeds. Specific /requests/mine is registered before /requests/:id. Resource/auth services export small safe summary interfaces; request responses explicitly project all fields.
+
+| Check | Result | Evidence / limit |
+|---|---|---|
+| Automated suite | Passed, 38/38 | npm test; 19 existing foundation/auth checks plus 18 workflow cases and one actual-server startup/API journey |
+| Real indexes / duplicates | Passed | Isolated mongod with built unique pair and list indexes. Two parallel submissions returned 201/409; final collection had one document and one submit event. Duplicate creation still conflicts after approval |
+| Ownership / roles | Passed | Other learner read/cancel/resubmit returned 404 and left the complete document unchanged. Reviewer learner-only actions and learner reviewer actions returned 403. Anonymous reads returned 401. Existing signup/current-role tests remain green |
+| Terminal and allowed transitions | Passed | Approved cannot cancel/resubmit/decide again. Reject → resubmit → cancel → resubmit stays on one document with revision 4 and all five reasons/events retained |
+| Concurrency | Passed | Parallel approve/reject and approve/cancel returned one 200 and one 409. Final revision=1, history length=2, persisted status/event/actor match the winner. Parallel resubmissions added one event/revision only |
+| Stale pending actions | Passed | Old revision 0 failed after cancel/resubmit restored pending at revision 2; complete stored document unchanged. A current revision 2 decision then succeeded |
+| Resource availability | Passed | Missing/inactive resource creation failed; inactive resource resubmission failed without changing state/history |
+| Validation / CSRF | Passed | Controlled invalid ID/body/query/revision/status/length errors; owner/status/history injection refused, repeated pagination rejected. Unicode reason bounds count code points. Missing/cross-site tokens rejected; no invalid operations appended history |
+| Lists / projections | Passed | Owner isolation, filters, empty metadata, stable tie-breaking and pagination; reviewer defaults pending oldest-first and all filter includes decisions. Learner/resource summary keys explicitly checked; no credential/session fields in responses |
+| Actual server startup | Passed | Dedicated MongoDB + child node src/server.js with synthetic test configuration and ephemeral port. Health ready after real workflow index creation. Seeded learner login → resource → request → reviewer queue/approval → owner approved detail with revision 1/two events; one persisted document |
+| Client build / audit | Passed / zero vulnerabilities | npm run build and npm audit --json. Existing roughly 521 kB main-chunk advisory remains non-failing; no UI changes or new performance acceptance claimed |
+| Data isolation | Passed | Each suite launched its own labaccess_test_* database through genuine mongod (8.2.6). Cleanup targets only those self-created disposable databases. No development database cleanup or real user data used |
+| Browser workflow | Pending, Phase 4 | Phase 3 verifies real HTTP APIs and persistence; live request dialog/queue/history integration has not been claimed |
+| Named tool / hosting | Pending | Phase 0's genuine Kiro identity/use and public HTTPS hosting gates remain open |
+
+The initial new parallel-submission acceptance test failed with 404/404 before implementation, confirming the old app did not serve workflow routes. After implementation it passed with 201/409 and final-document assertions. The previous auth test's expected reviewer-route 404 was updated to 200 because the real queue now exists behind the same trusted-role guard.
+
+All mutations derive the actor from the authenticated account. Creation supplies initial state/history on the server. Every transition checks visibility/role and conditions its single state/history/revision update on the previous status and expected revision (plus owner for learner actions). Server timestamps are shared by event and update; resubmission updates submittedAt and clears only the current decisionReason. Errors distinguish hidden/missing 404 from visible stale/conflicting 409. Resource activity is checked immediately before creation/resubmission; resource-editing transactions/UI are outside this MVP. On an uncertain write response, the Phase 4 client must read saved state before offering another mutation.
+
+Phase 3 is verified locally. The full browser request/reviewer/history journey, remaining learner UI behavior, integrated accessibility/motion, fresh-clone acceptance, public hosting, and assessment submission remain later-phase work. Phase 0 remains in progress for genuine named-tool evidence.

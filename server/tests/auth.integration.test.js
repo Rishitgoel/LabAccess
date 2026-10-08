@@ -173,8 +173,8 @@ test("trusted current account role controls reviewer guard", async () => {
   const c = await signIn();
   await c.agent.get("/api/review/requests").expect(403);
   const reviewer = await signIn("reviewer@labaccess.test");
-  // The role gate allows the reviewer through; the Phase 3 route is still absent.
-  await reviewer.agent.get("/api/review/requests").expect(404);
+  // Phase 3 now supplies the reviewer list behind the same trusted-role gate.
+  await reviewer.agent.get("/api/review/requests").expect(200);
   await User.updateOne(
     { email: "reviewer@labaccess.test" },
     { role: "learner" },

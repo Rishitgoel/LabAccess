@@ -256,34 +256,36 @@ October 8 evidence: [verification ledger](docs/verification.md#phase-2--authenti
 
 ### Tasks
 
-- [ ] Implement AccessRequest with owner/resource references, reason, status, submission time, decision reason, revision, and embedded history.
-- [ ] Create the unique learner/resource compound index and list indexes. Ensure indexes exist before concurrency tests run; a model declaration alone is insufficient.
-- [ ] Implement create, own-list, authorized detail, cancellation, resubmission, reviewer-list, and decision routes from PRD.md.
-- [ ] Register specific routes such as /requests/mine before parameter routes.
-- [ ] Validate IDs, enums, lengths, revisions, pagination, and allowlisted fields.
-- [ ] Derive learner ID on creation; reject or ignore attempts to set actor/status/history.
-- [ ] Reject missing/inactive resource requests. Recheck resource availability on resubmission.
-- [ ] Translate database duplicate-key errors into the public 409 error format.
-- [ ] Use one transition service with explicit allowed transitions. Enforce role/owner rules for every action.
-- [ ] Perform conditional updates using ID, permitted status, expected revision, and owner where required. Update status/reason and append history in the same operation.
-- [ ] On resubmit update submittedAt, clear current decisionReason, retain earlier events, and increment revision.
-- [ ] Return 404 for another learner's request; 409 for a valid visible request with stale state/revision. Do not leak ownership details.
-- [ ] Project response fields so password hashes/session internals never appear through populated learner data.
+- [x] Implement AccessRequest with owner/resource references, reason, status, submission time, decision reason, revision, and embedded history.
+- [x] Create the unique learner/resource compound index and list indexes. Ensure indexes exist before concurrency tests run; a model declaration alone is insufficient.
+- [x] Implement create, own-list, authorized detail, cancellation, resubmission, reviewer-list, and decision routes from PRD.md.
+- [x] Register specific routes such as /requests/mine before parameter routes.
+- [x] Validate IDs, enums, lengths, revisions, pagination, and allowlisted fields.
+- [x] Derive learner ID on creation; reject or ignore attempts to set actor/status/history.
+- [x] Reject missing/inactive resource requests. Recheck resource availability on resubmission.
+- [x] Translate database duplicate-key errors into the public 409 error format.
+- [x] Use one transition service with explicit allowed transitions. Enforce role/owner rules for every action.
+- [x] Perform conditional updates using ID, permitted status, expected revision, and owner where required. Update status/reason and append history in the same operation.
+- [x] On resubmit update submittedAt, clear current decisionReason, retain earlier events, and increment revision.
+- [x] Return 404 for another learner's request; 409 for a valid visible request with stale state/revision. Do not leak ownership details.
+- [x] Project response fields so password hashes/session internals never appear through populated learner data.
 
 ### Required tests before exit
 
-- [ ] Two parallel submissions for the same pair yield one request and one conflict.
-- [ ] Learner A cannot read/cancel/resubmit learner B's request.
-- [ ] Learners cannot approve/reject or change their role.
-- [ ] Approved requests cannot be cancelled/resubmitted/decided again.
-- [ ] Parallel approve/reject yields one success, one conflict, one new event.
-- [ ] Parallel approve/cancel yields one success and one matching event.
-- [ ] An action based on an old revision fails even after cancellation/resubmission returns status to pending.
-- [ ] Failed transitions do not append history.
-- [ ] Rejected/cancelled resubmission preserves old reasons/history.
-- [ ] Invalid IDs/body/query values cause controlled errors.
+- [x] Two parallel submissions for the same pair yield one request and one conflict.
+- [x] Learner A cannot read/cancel/resubmit learner B's request.
+- [x] Learners cannot approve/reject or change their role.
+- [x] Approved requests cannot be cancelled/resubmitted/decided again.
+- [x] Parallel approve/reject yields one success, one conflict, one new event.
+- [x] Parallel approve/cancel yields one success and one matching event.
+- [x] An action based on an old revision fails even after cancellation/resubmission returns status to pending.
+- [x] Failed transitions do not append history.
+- [x] Rejected/cancelled resubmission preserves old reasons/history.
+- [x] Invalid IDs/body/query values cause controlled errors.
 
 Run these against an isolated test MongoDB database using real indexes, not only mocked persistence. Verify final documents as well as HTTP responses. Never point destructive test cleanup at development/production data.
+
+October 8 evidence: [verification ledger](docs/verification.md#phase-3--workflow-backend-october-8-2026). All Phase 3 gates passed with real indexes and final-document checks. The actual server startup and persisted API journey also passed. Browser request/review integration remains Phase 4.
 
 **Suggested commit:** `feat: implement request workflow and verify authorization and races`.
 
@@ -517,8 +519,8 @@ Keep one short tracker, rather than duplicating status across documents:
 |---|---|---|---|
 | 0 | In progress | Phase 0 foundation commit; docs/verification.md | Kiro account, identity clarification, one genuine task |
 | 1 | Verified complete | Phase 1 UI commit; docs/verification.md | Preserved at /preview |
-| 2 | Verified complete | Phase 2 auth/data commit; docs/verification.md | Phase 3 request backend |
-| 3 | Not started | — | Request rules/critical tests |
+| 2 | Verified complete | Phase 2 auth/data commit; docs/verification.md | Auth retained and regression-tested |
+| 3 | Verified complete | Phase 3 workflow commit; docs/verification.md | Phase 4 browser integration |
 | 4 | Not started | — | Complete browser flow |
 | 5 | Not started | — | Remaining core behavior |
 | 6 | Not started | — | Responsive/motion finish |

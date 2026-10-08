@@ -7,6 +7,7 @@ import {
 } from "./config/database.js";
 import { User } from "./modules/auth/user.model.js";
 import { Resource } from "./modules/resources/resource.model.js";
+import { AccessRequest } from "./modules/requests/request.model.js";
 
 async function start() {
   const config = readConfig();
@@ -15,7 +16,11 @@ async function start() {
   let connected = false;
   try {
     await connectDatabase(config);
-    await Promise.all([User.createIndexes(), Resource.createIndexes()]);
+    await Promise.all([
+      User.createIndexes(),
+      Resource.createIndexes(),
+      AccessRequest.createIndexes(),
+    ]);
     connected = true;
     console.log("Database connected.");
   } catch (error) {

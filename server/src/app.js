@@ -7,7 +7,10 @@ import { csrfProtection } from "./middleware/csrf.js";
 import { authRoutes } from "./modules/auth/auth.routes.js";
 import { resourceRoutes } from "./modules/resources/resource.routes.js";
 import { ApiError } from "./middleware/errors.js";
-import { requireAuth, requireRole } from "./middleware/auth.js";
+import {
+  requestRoutes,
+  reviewRoutes,
+} from "./modules/requests/request.routes.js";
 
 export function createApp({
   isDatabaseReady = databaseReady,
@@ -50,7 +53,8 @@ export function createApp({
     app.use("/api", csrfProtection(config));
     app.use("/api/auth", authRoutes(config));
     app.use("/api/resources", resourceRoutes);
-    app.use("/api/review", requireAuth, requireRole("reviewer"));
+    app.use("/api/requests", requestRoutes);
+    app.use("/api/review", reviewRoutes);
   }
   app.use("/api", (_req, res) =>
     res

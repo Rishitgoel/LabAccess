@@ -3,6 +3,12 @@ import { randomBytes } from "node:crypto";
 import { ApiError } from "../../middleware/errors.js";
 import { User, publicUser } from "./user.model.js";
 const length = (value) => [...value].length;
+export async function getUserSummaries(ids) {
+  const users = await User.find({ _id: { $in: ids } })
+    .select("name email role")
+    .lean();
+  return new Map(users.map((user) => [String(user._id), publicUser(user)]));
+}
 export function validateCredentials(body, registration = false) {
   const fields = {};
   const email =
