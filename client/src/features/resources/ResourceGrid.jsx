@@ -18,8 +18,12 @@ export function ResourceGrid({ resources, requests, role, onRequest, onView }) {
             resource={resource}
             status={requests[resource.id]?.status}
             role={role}
-            onRequest={(event) => onRequest(resource, event.currentTarget)}
-            onView={(event) => onView(resource, event.currentTarget)}
+            onRequest={
+              onRequest && ((event) => onRequest(resource, event.currentTarget))
+            }
+            onView={
+              onView && ((event) => onView(resource, event.currentTarget))
+            }
           />
         </motion.div>
       ))}

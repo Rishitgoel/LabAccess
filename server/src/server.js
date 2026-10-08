@@ -1,32 +1,58 @@
-import { createApp } from './app.js';
-import { readConfig } from './config/env.js';
-import { connectDatabase, disconnectDatabase } from './config/database.js';
+import { createApp } from "./app.js";
+import { readConfig } from "./config/env.js";
+import {
+  connectDatabase,
+  disconnectDatabase,
+  databaseReady,
+} from "./config/database.js";
+import { User } from "./modules/auth/user.model.js";
+import { Resource } from "./modules/resources/resource.model.js";
 
 async function start() {
   const config = readConfig();
-  const app = createApp({ production: config.nodeEnv === 'production' });
+  if (!config.sessionSecret || config.sessionSecret.length < 32)
+    throw new Error("SESSION_SECRET must contain at least 32 characters.");
+  let connected = false;
   try {
     await connectDatabase(config);
-    console.log('Database connected.');
+    await Promise.all([User.createIndexes(), Resource.createIndexes()]);
+    connected = true;
+    console.log("Database connected.");
   } catch (error) {
     console.error(error.message);
-    console.error('API will report 503 readiness until the database is connected.');
+    console.error(
+      "API will report 503 readiness until the database is connected.",
+    );
   }
-  const listener = app.listen(config.port, '127.0.0.1', () => console.log(`LabAccess API listening on http://127.0.0.1:${config.port}`));
-  listener.on('error', async () => {
-    console.error('API listener failed. Check PORT and whether another process is using it.');
+  const app = createApp({
+    production:
+      config.nodeEnv === "production" ||
+      process.argv.includes("--serve-client"),
+    config,
+    isDatabaseReady: () => connected && databaseReady(),
+  });
+  const listener = app.listen(config.port, "127.0.0.1", () =>
+    console.log(`LabAccess API listening on http://127.0.0.1:${config.port}`),
+  );
+  listener.on("error", async () => {
+    console.error(
+      "API listener failed. Check PORT and whether another process is using it.",
+    );
     await disconnectDatabase();
     process.exitCode = 1;
   });
   async function stop() {
     listener.close();
+    await app.locals.sessionStore?.close();
     await disconnectDatabase();
   }
-  process.once('SIGINT', stop);
-  process.once('SIGTERM', stop);
+  process.once("SIGINT", stop);
+  process.once("SIGTERM", stop);
 }
 
 start().catch(() => {
-  console.error('Startup failed. Check environment configuration and client build.');
+  console.error(
+    "Startup failed. Check environment configuration and client build.",
+  );
   process.exitCode = 1;
 });

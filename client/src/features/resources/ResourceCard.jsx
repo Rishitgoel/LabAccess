@@ -49,7 +49,7 @@ export function ResourceCard({ resource, status, role, onRequest, onView }) {
       <ResourceSummary resource={resource} />
       <div className="resource-card__actions">
         {status && <StatusBadge status={status} />}
-        {role === "learner" && !status ? (
+        {role === "learner" && !status && onRequest ? (
           <Button onClick={onRequest}>
             Request access
             <ArrowRight aria-hidden="true" />
@@ -61,7 +61,9 @@ export function ResourceCard({ resource, status, role, onRequest, onView }) {
           </Button>
         ) : (
           <span className="resource-card__readonly">
-            Requests are made by learners.
+            {role === "reviewer"
+              ? "Requests are made by learners."
+              : "Available in your learning catalog."}
           </span>
         )}
       </div>

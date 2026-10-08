@@ -1,45 +1,65 @@
 # LabAccess
 
-A MERN learning-resource request and review application. Learners will request resources, reviewers will decide, and both will see persisted history. Approval records a decision; it does not provision external access.
+A MERN learning-resource request and review application. Approval records a decision; it does not provision external access.
 
-**Current state: Phase 1 design foundation.** The warm resource catalog, six sample resources, status badges, accessible request dialog, and feedback previews are implemented. Requests stay in memory and reset on refresh. Authentication, database-backed resources/workflow, and real seeding are scheduled for later phases. Express readiness remains available at `/api/health`.
+**Current state: Phase 2 verified locally.** Registration, login/logout, MongoDB sessions, role guards, CSRF protection, and the database-backed resource catalog are implemented. Request submission, review, and history arrive in Phases 3–5. The normal app uses MongoDB; `/preview` preserves the Phase 1 fixture demonstration and clearly labels its unsaved behavior.
 
-Use the demo profile menu → **Preview options** to inspect loading, empty, error, and reviewer variants or simulate a failed submission. My requests and View request show read-only fixture summaries, not completed persisted request pages. Search/category controls are omitted until implemented.
+![Registration](docs/screenshots/phase2-registration-desktop.png)
 
-![Phase 1 catalog](docs/screenshots/phase1-catalog-desktop.png)
+## Setup
 
-## Prerequisites and install
-
-Use Node **24.14.1 or a later Node 24 release**, npm **11.x** (verified with 11.11.0), and MongoDB locally or Atlas for later persisted features. From the repository root:
+Use Node **24.14.1 or a later Node 24 release**, npm **11.x** (verified 11.11.0), and MongoDB locally or Atlas.
 
 ```powershell
 npm ci
 Copy-Item .env.example .env
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 ```
 
-Configure MONGODB_URI in `.env` for your development database. The example points to `mongodb://127.0.0.1:27017/labaccess_dev`. Never commit credentials or `.env`. No local MongoDB service is installed by this repository.
+Copy the generated random value into `SESSION_SECRET` in `.env`. Set `SEED_DEMO_PASSWORD` to a synthetic password of 12–128 characters; quote it if it includes spaces or `#`. Never use a real password for demo accounts or commit `.env`.
 
-## Commands
+The supplied development origin is `http://127.0.0.1:5173`. Use that exact address in the browser; `APP_ORIGIN` includes the scheme and port. Set `MONGODB_URI` to a dedicated demo database named `labaccess_dev` or `labaccess_test[_suffix]` if using the seed.
+
+If MongoDB is not installed, start the development helper in a separate terminal:
 
 ```powershell
+npm run mongo
+```
+
+This downloads a genuine MongoDB binary through mongodb-memory-server and runs it on loopback port 27017. It preserves data in ignored `.local/mongodb` across restarts. It installs no system service and refuses production. Use a normal supported MongoDB deployment for hosting. Initial binary download requires internet access; tests also use this cached binary.
+
+Then, in another terminal:
+
+```powershell
+npm run seed
 npm run dev
+```
+
+Open [the app](http://127.0.0.1:5173). Vite proxies `/api` to Express on port 3001. Keep PORT=3001 for this proxy. Stop each terminal process with Ctrl+C.
+
+## Synthetic accounts
+
+| Email | Role |
+|---|---|
+| learner@labaccess.test | Learner |
+| learner2@labaccess.test | Learner |
+| reviewer@labaccess.test | Reviewer |
+
+All three use your configured `SEED_DEMO_PASSWORD`. Public registration always creates a learner and does not automatically sign in. There is no role picker. The seed inserts six resources and these accounts using insert-only upserts; repeated runs preserve IDs, existing records, and existing passwords. Changing the configured seed password does **not** reset existing accounts. There is no destructive reset command. Seed refuses production, non-demo database names, and missing/invalid demo passwords before connecting.
+
+## Verification and build
+
+```powershell
 npm test
 npm run build
-npm run seed
+npm audit
 ```
 
-Development: open `http://127.0.0.1:5173`. Vite proxies `/api` to Express on port 3001. Keep PORT=3001 for the supplied proxy; change the proxy alongside it if needed. Stop development with Ctrl+C. Tests use isolated ephemeral HTTP listeners and an intentionally unreachable local database address; they do not delete development data.
+The 19 checks include real MongoDB indexes, concurrent normalized-email registration, cookie/session expiry, regeneration/logout replay, trusted role changes, CSRF/origin rejection, resource pagination, rate limiting, seed guards, and unavailable-database recovery boundaries. Integration tests launch an isolated disposable database and never delete the development database. Browser evidence covers proxy login/registration, refresh, logout, learner/reviewer routes, database restart recovery, and 1440/768/375px layouts. See [verification](docs/verification.md).
 
-`npm run seed` currently fails clearly without changing the database: synthetic accounts/resources arrive in Phase 2. It also refuses NODE_ENV=production. No demo accounts exist yet.
+For a local same-origin built-client check, run `npm start` after building while retaining development settings; open `http://127.0.0.1:3001` and set `APP_ORIGIN` to that exact origin first. Restore the Vite origin when returning to `npm run dev`.
 
-After building, stop development and run the same-origin production server:
-
-```powershell
-$env:NODE_ENV = 'production'
-npm start
-```
-
-Open `http://127.0.0.1:3001`; direct SPA paths return the built client, while `/api` retains JSON responses. Set NODE_ENV back to development before resuming development. This is a local topology check; public HTTPS hosting and secure sessions require later validation.
+Production requires `NODE_ENV=production`, an HTTPS `APP_ORIGIN`, a strong `SESSION_SECRET`, MongoDB, and a built client. Cookies are Secure in production. TLS termination, public binding, and narrowly scoped trust-proxy configuration must be established and verified during hosting; the current server listens on loopback and trusts no proxy. Plain HTTP is insufficient for production login. Public HTTPS deployment has not been verified.
 
 ## Environment
 
@@ -47,21 +67,21 @@ Open `http://127.0.0.1:3001`; direct SPA paths return the built client, while `/
 |---|---|
 | NODE_ENV | development/test/production |
 | PORT | API port, default 3001 |
-| MONGODB_URI | database connection, never logged |
-| DB_CONNECT_TIMEOUT_MS | bounded initial connection wait, default 5000 |
-| SESSION_SECRET | reserved for Phase 2; generate a strong random secret before auth |
-| SESSION_MAX_AGE_MS | planned session idle lifetime, default 28800000 |
-| APP_ORIGIN | planned CSRF allowed browser origin; use actual origin including port |
-| SEED_DEMO_PASSWORD | reserved for Phase 2 synthetic accounts |
+| MONGODB_URI | Database connection, never logged |
+| DB_CONNECT_TIMEOUT_MS | Bounded selection wait, default 5000 |
+| SESSION_SECRET | Required random secret, at least 32 characters |
+| SESSION_MAX_AGE_MS | Rolling idle lifetime, default 8 hours; 1 minute–7 days |
+| APP_ORIGIN | Exact allowed mutation origin; HTTPS in production |
+| SEED_DEMO_PASSWORD | Synthetic demo password, 12–128 characters |
 
-The API can start without a database, but `/api/health` returns **503** with a controlled failure message. The Phase 1 catalog uses fixtures independently of database readiness. Configure/start MongoDB and restart after an initial failure. Database-backed feature acceptance is still pending.
+Health and configured feature routes return **503** when database readiness fails. An initial connection/index failure requires a server restart after fixing MongoDB. A later outage hides private content on session bootstrap; retry recovers after the established connection reconnects. API errors omit credentials, hashes, and session internals.
 
-## Technologies and decisions
+## Architecture
 
-React 19, Vite 8, Tailwind 4, customized shadcn/Radix primitives, Motion, Lucide, locally bundled Inter/DM Serif Display fonts, Node 24, Express 5, Mongoose 9, npm workspaces, and Node's built-in test runner. Warm white/beige design, horizontal navigation, feature ownership, server sessions, embedded request history, and conditional revisions are specified in the [architecture](docs/architecture.md) and [API contract](docs/api-contract.md). Sessions and workflow are contracts, not implemented claims.
+React 19, Vite 8, Tailwind 4, shadcn/Radix, Motion, Lucide, locally bundled fonts, Node 24, Express 5, Mongoose 9, express-session/connect-mongo, Argon2id, React Router, and npm workspaces. Sessions hold user ID and a CSRF token; protected calls load the current account role. No login state is saved to localStorage. Every mutation requires a synchronizer token and verified Origin/Referer. Login regenerates the session and rotates the token; logout destroys it. Authentication attempts are limited to 20 per IP per 15 minutes in this single-process application. See [architecture](docs/architecture.md) and [API contract](docs/api-contract.md).
 
-## AI development experience and evidence
+## AI development and outstanding gates
 
-Codex prepared the Phase 0 foundation. Kiro is recommended as the required assessment tool but **has not yet been used**. The email's `app.kiro.de` link differs from official `kiro.dev`; assessment-tool identity remains unresolved. Genuine named-tool tasks and verified outcomes will be recorded in [AI usage](docs/ai-usage.md). No 3–5-task claim is made yet.
+Codex implemented the foundations and Phases 1–2. Kiro is recommended but **has not yet been used**. The email's `app.kiro.de` differs from official `kiro.dev`; assessment-tool identity is unresolved. Phase 0 remains open for identity clarification and a genuine named-tool task. [AI usage](docs/ai-usage.md) contains the prepared task; no 3–5-task claim is made.
 
-See [verification](docs/verification.md) and the [implementation tracker](IMPLEMENTATION_PLAN.md#17-daily-progress-tracking) for actual results and remaining gates. [UI references](docs/UI_REFERENCE_GUIDE.md) are concept images, not working application screenshots. The public repository is [Rishitgoel/LabAccess](https://github.com/Rishitgoel/LabAccess), published on October 8, 2026 at the user's request. The assessment submission has not been emailed; Phase 0's named-tool gates remain open.
+[Implementation tracker](IMPLEMENTATION_PLAN.md#17-daily-progress-tracking), [UI reference guide](docs/UI_REFERENCE_GUIDE.md), and [public repository](https://github.com/Rishitgoel/LabAccess). Concept images are not implementation screenshots. Assessment submission has not been emailed.

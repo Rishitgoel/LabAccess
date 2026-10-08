@@ -1,10 +1,18 @@
-import { readConfig } from '../config/env.js';
+import { readConfig } from "../config/env.js";
+import { connectDatabase, disconnectDatabase } from "../config/database.js";
+import { seedData, validateSeed } from "./seed-data.js";
 
 try {
   const config = readConfig();
-  if (config.nodeEnv === 'production') throw new Error('Seed is forbidden in production.');
-  throw new Error('Seed data is not implemented yet. Phase 2 will add guarded, repeatable synthetic accounts and resources. No database changes were made.');
+  validateSeed(config, process.env.SEED_DEMO_PASSWORD);
+  await connectDatabase(config);
+  await seedData(config, process.env.SEED_DEMO_PASSWORD);
+  console.log(
+    "Synthetic seed complete: six resources and three demo accounts. Existing records were preserved.",
+  );
 } catch (error) {
   console.error(error.message);
   process.exitCode = 1;
+} finally {
+  await disconnectDatabase();
 }

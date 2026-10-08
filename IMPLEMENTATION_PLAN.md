@@ -222,29 +222,31 @@ October 8 evidence: [verification ledger](docs/verification.md). Foundations pas
 
 ### Tasks
 
-- [ ] Implement User and Resource models with unique normalized email and required fields.
-- [ ] Implement server-side sessions using established session middleware and a MongoDB session store.
-- [ ] Regenerate the session on login; store only the necessary identity; derive current role from a trusted server-side account.
-- [ ] Destroy the session and clear the matching cookie on logout.
-- [ ] Configure HTTP-only cookies, explicit SameSite policy, secure production cookies, and environment-driven expiry.
-- [ ] Add bounded login rate limiting and password hashing with an established library. Never log passwords.
-- [ ] Implement POST register/login/logout and GET me. Registration cannot assign reviewer role.
-- [ ] Protect mutation endpoints against cross-site requests; document the chosen CSRF mechanism and ensure the API client uses it. SameSite alone is not the entire policy.
-- [ ] Add requireAuth and requireRole middleware; route protection on the client is only presentation.
-- [ ] Add a guarded development/test seed for six resources, two learners, and one reviewer. Obtain demo passwords from documented setup/configuration; no real credentials.
-- [ ] Ensure seed is repeatable and refuses production/destructive resets by default.
-- [ ] Implement GET resources and health readiness. Health must reflect database readiness rather than always returning success.
-- [ ] Build auth pages/session bootstrap. Reuse [the clean artwork](assets/labaccess-hero.png) in the decorative AuthLayout panel. Wait for session resolution before role redirects to avoid UI flashes.
+- [x] Implement User and Resource models with unique normalized email and required fields.
+- [x] Implement server-side sessions using established session middleware and a MongoDB session store.
+- [x] Regenerate the session on login; store only the necessary identity; derive current role from a trusted server-side account.
+- [x] Destroy the session and clear the matching cookie on logout.
+- [x] Configure HTTP-only cookies, explicit SameSite policy, secure production cookies, and environment-driven expiry.
+- [x] Add bounded login rate limiting and password hashing with an established library. Never log passwords.
+- [x] Implement POST register/login/logout and GET me. Registration cannot assign reviewer role.
+- [x] Protect mutation endpoints against cross-site requests; document the chosen CSRF mechanism and ensure the API client uses it. SameSite alone is not the entire policy.
+- [x] Add requireAuth and requireRole middleware; route protection on the client is only presentation.
+- [x] Add a guarded development/test seed for six resources, two learners, and one reviewer. Obtain demo passwords from documented setup/configuration; no real credentials.
+- [x] Ensure seed is repeatable and refuses production/destructive resets by default.
+- [x] Implement GET resources and health readiness. Health must reflect database readiness rather than always returning success.
+- [x] Build auth pages/session bootstrap. Reuse [the clean artwork](assets/labaccess-hero.png) in the decorative AuthLayout panel. Wait for session resolution before role redirects to avoid UI flashes.
 
 ### Tests and exit gate
 
-- [ ] Signup with reviewer role cannot create a reviewer.
-- [ ] Duplicate normalized emails return controlled conflict.
-- [ ] Wrong credentials, unauthenticated calls, and learner reviewer-route calls fail appropriately.
-- [ ] Login/refresh works through the development proxy.
-- [ ] The old session fails after logout.
-- [ ] Cross-site mutation attempts are rejected under the chosen mechanism.
-- [ ] Resource cards load real MongoDB records; fixtures no longer back the normal app.
+- [x] Signup with reviewer role cannot create a reviewer.
+- [x] Duplicate normalized emails return controlled conflict.
+- [x] Wrong credentials, unauthenticated calls, and learner reviewer-route calls fail appropriately.
+- [x] Login/refresh works through the development proxy.
+- [x] The old session fails after logout.
+- [x] Cross-site mutation attempts are rejected under the chosen mechanism.
+- [x] Resource cards load real MongoDB records; fixtures no longer back the normal app.
+
+October 8 evidence: [verification ledger](docs/verification.md#phase-2--authentication-and-real-data-october-8-2026). All Phase 2 gates passed locally against real MongoDB and the browser proxy. Request/review workflow and public HTTPS hosting remain later-phase work.
 
 **Suggested commit:** `feat: add database-backed authentication and resource catalog`.
 
@@ -514,8 +516,8 @@ Keep one short tracker, rather than duplicating status across documents:
 | Phase | State | Commit/evidence | Next action |
 |---|---|---|---|
 | 0 | In progress | Phase 0 foundation commit; docs/verification.md | Kiro account, identity clarification, one genuine task |
-| 1 | Verified complete | Phase 1 UI commit; docs/verification.md | Phase 2 database/authentication |
-| 2 | Not started | — | Database/authentication |
+| 1 | Verified complete | Phase 1 UI commit; docs/verification.md | Preserved at /preview |
+| 2 | Verified complete | Phase 2 auth/data commit; docs/verification.md | Phase 3 request backend |
 | 3 | Not started | — | Request rules/critical tests |
 | 4 | Not started | — | Complete browser flow |
 | 5 | Not started | — | Remaining core behavior |

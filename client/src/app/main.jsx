@@ -1,129 +1,122 @@
-import React, { useState } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { MotionConfig } from "motion/react";
-import { AppHeader } from "@/components/layout/AppHeader";
-import {
-  EmptyState,
-  ErrorState,
-  ResourceSkeletons,
-} from "@/components/feedback/States";
-import { CatalogHero } from "@/features/resources/CatalogHero";
-import { ResourceGrid } from "@/features/resources/ResourceGrid";
-import { resources, initialRequests } from "@/features/resources/fixtures";
-import { RequestFormDialog } from "@/features/requests/RequestFormDialog";
-import { PreviewDialog } from "./PreviewDialog";
+import { SessionProvider, useSession } from "@/features/auth/SessionProvider";
+import AuthPage from "@/features/auth/AuthPage";
+import CatalogPage from "@/features/resources/CatalogPage";
+const PreviewCatalog = React.lazy(() => import("./PreviewCatalog"));
+import { Button } from "@/components/ui/button";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/dm-serif-display/400.css";
 import "../styles/global.css";
-
-function App() {
-  const [requests, setRequests] = useState(initialRequests);
-  const [role, setRole] = useState("learner");
-  const [preview, setPreview] = useState("catalog");
-  const [failSubmission, setFailSubmission] = useState(false);
-  const [dialog, setDialog] = useState(null);
-  const [notice, setNotice] = useState("");
-  const reset = () => {
-    setRequests(initialRequests);
-    setPreview("catalog");
-    setNotice("Preview reset. No server data was changed.");
-  };
-  async function submit(resource, reason) {
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    if (failSubmission) {
-      setFailSubmission(false);
-      throw new Error(
-        "Preview submission failed. Your reason is still here. Try again.",
-      );
-    }
-    setRequests((previous) => ({
-      ...previous,
-      [resource.id]: { status: "pending", reason },
-    }));
-    setNotice(
-      "Request added to this preview. Nothing was saved to a server; refreshing resets it.",
+function Guard({ publicPage, role, children }) {
+  const { loading, user, error, refresh } = useSession();
+  if (loading)
+    return (
+      <main className="session-state" role="status">
+        Checking your session…
+      </main>
     );
-  }
-  const openList = (event) =>
-    setDialog({ type: "list", opener: event.currentTarget });
+  if (error)
+    return (
+      <main className="session-state">
+        <h1>Could not connect</h1>
+        <p role="alert">{error.message}</p>
+        <Button onClick={refresh}>Try again</Button>
+      </main>
+    );
+  if (publicPage) return user ? <Navigate to="/" replace /> : children;
+  if (!user) return <Navigate to="/login" replace />;
+  if (role && role !== user.role)
+    return (
+      <main className="session-state">
+        <h1>Access denied</h1>
+        <p>This page is available to reviewers.</p>
+        <a href="/">Return to resources</a>
+      </main>
+    );
+  return children;
+}
+function App() {
   return (
     <MotionConfig reducedMotion="user">
-      <AppHeader
-        role={role}
-        onViewRequests={openList}
-        onOptions={(opener) => setDialog({ type: "options", opener })}
-        onReset={reset}
-      />
-      <main className="page-container">
-        <CatalogHero role={role} onViewRequests={openList} />
-        <div className="catalog-heading">
-          <div>
-            <h2>Explore resources</h2>
-            <p>{preview === "empty" ? 0 : resources.length} resources</p>
-          </div>
-          <span className="fixture-label">Interactive preview · not saved</span>
-        </div>
-        {notice && (
-          <p className="notice" role="status">
-            {notice}
-          </p>
-        )}
-        {preview === "loading" ? (
-          <ResourceSkeletons />
-        ) : preview === "empty" ? (
-          <EmptyState onReset={() => setPreview("catalog")} />
-        ) : preview === "error" ? (
-          <ErrorState onRetry={() => setPreview("catalog")} />
-        ) : (
-          <ResourceGrid
-            resources={resources}
-            requests={role === "reviewer" ? {} : requests}
-            role={role}
-            onRequest={(resource, opener) =>
-              setDialog({ type: "request", resource, opener })
-            }
-            onView={(resource, opener) =>
-              setDialog({ type: "detail", resource, opener })
-            }
-          />
-        )}
-        <footer className="catalog-footer">
-          <p>Access decisions are managed by your reviewer.</p>
-          <p>
-            Sample data for design review. Accounts and saved requests arrive in
-            later phases.
-          </p>
-        </footer>
-      </main>
-      {dialog?.type === "request" ? (
-        <RequestFormDialog
-          key={dialog.resource.id}
-          resource={dialog.resource}
-          openingControl={dialog.opener}
-          onClose={() => setDialog(null)}
-          onSubmit={submit}
-        />
-      ) : (
-        dialog && (
-          <PreviewDialog
-            dialog={dialog}
-            onClose={() => setDialog(null)}
-            role={role}
-            setRole={setRole}
-            preview={preview}
-            setPreview={setPreview}
-            requests={requests}
-            failSubmission={failSubmission}
-            setFailSubmission={setFailSubmission}
-          />
-        )
-      )}
+      <BrowserRouter>
+        <SessionProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Guard>
+                  <CatalogPage />
+                </Guard>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <Guard publicPage>
+                  <AuthPage key="login" />
+                </Guard>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <Guard publicPage>
+                  <AuthPage key="register" registration />
+                </Guard>
+              }
+            />
+            <Route
+              path="/review"
+              element={
+                <Guard role="reviewer">
+                  <main className="session-state">
+                    <h1>Review queue</h1>
+                    <p>
+                      The request workflow will be connected in the next phases.
+                    </p>
+                    <a href="/">Return to resources</a>
+                  </main>
+                </Guard>
+              }
+            />
+            <Route
+              path="/preview"
+              element={
+                <React.Suspense
+                  fallback={
+                    <main className="session-state" role="status">
+                      Loading preview…
+                    </main>
+                  }
+                >
+                  <PreviewCatalog />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <main className="session-state">
+                  <h1>Page not found</h1>
+                  <a href="/">Return to resources</a>
+                </main>
+              }
+            />
+          </Routes>
+        </SessionProvider>
+      </BrowserRouter>
     </MotionConfig>
   );
 }
-createRoot(document.getElementById("root")).render(
+const root =
+  import.meta.hot?.data.root ?? createRoot(document.getElementById("root"));
+if (import.meta.hot) import.meta.hot.data.root = root;
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,

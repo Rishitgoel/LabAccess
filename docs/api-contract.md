@@ -1,6 +1,6 @@
 # LabAccess API contract
 
-Phase 0 decisions, October 8, 2026. Only `GET /api/health` is implemented now; the feature routes below are contracts for Phases 2–5. JSON bodies are limited to 16 KiB. Production serves the React build and `/api` from the same origin; development uses Vite's `/api` proxy.
+Updated October 8, 2026: health, all auth routes, and GET resources are implemented in Phase 2. Request/review endpoints remain contracts for Phases 3–5; the `/api/review` namespace enforces authentication and reviewer role, then returns 404 for unimplemented routes. JSON bodies are limited to 16 KiB. Production serves the React build and `/api` from the same origin; development uses Vite's `/api` proxy.
 
 ## Envelopes and errors
 
@@ -59,7 +59,7 @@ Resource fields: `id,name,description,category,eligibility,isActive`. Request fi
 
 Learner requests order by submittedAt descending, then id descending. Pending reviewer requests order by submittedAt ascending, then id ascending; other reviewer filters use descending order. Resources use name ascending then id ascending. Catalog status mapping must read all owner request pages rather than only the visible page.
 
-## Sessions and CSRF (Phase 2 implementation contract)
+## Sessions and CSRF (implemented Phase 2)
 
 Use express-session with a MongoDB-backed store, opaque cookie `labaccess.sid`, HttpOnly, SameSite=Lax, Path=/, no Domain, and Secure in production HTTPS. Default idle lifetime: 8 hours via SESSION_MAX_AGE_MS; use rolling expiry with matching store lifetime. SESSION_SECRET is required before implementing auth. The session stores user ID only; load the trusted user/role on each protected request. Regenerate on login and rotate the CSRF token. Logout destroys the server session and clears the matching cookie. Do not persist login data in localStorage.
 

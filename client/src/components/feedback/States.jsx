@@ -17,12 +17,15 @@ export function EmptyState({ onReset }) {
     </Card>
   );
 }
-export function ErrorState({ onRetry }) {
+export function ErrorState({
+  onRetry,
+  message = "This is a read-error preview.",
+}) {
   return (
     <Card className="feedback" role="alert">
       <AlertCircle aria-hidden="true" />
       <h3>Resources could not be loaded</h3>
-      <p>This is a read-error preview.</p>
+      <p>{message}</p>
       <Button onClick={onRetry}>Try again</Button>
     </Card>
   );

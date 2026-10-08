@@ -11,10 +11,12 @@ export function CatalogHero({ role, onViewRequests }) {
           starts here.
         </h1>
         <p>Explore learning resources. Request access. Keep moving.</p>
-        <Button size="lg" onClick={onViewRequests}>
-          {role === "reviewer" ? "View review queue" : "View my requests"}
-          <ArrowRight aria-hidden="true" />
-        </Button>
+        {onViewRequests && (
+          <Button size="lg" onClick={onViewRequests}>
+            {role === "reviewer" ? "View review queue" : "View my requests"}
+            <ArrowRight aria-hidden="true" />
+          </Button>
+        )}
       </div>
       <img
         className="catalog-hero__art"
