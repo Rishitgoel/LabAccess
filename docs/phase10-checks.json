@@ -1,0 +1,66 @@
+{
+  "reviewedCommit": "7665ba508e96808420ce8af134d47de0f971bb31",
+  "scope": "Recovery buffer: setup, core flow, authorization, data integrity and submission preparation; no feature additions",
+  "documentation": {
+    "localLinks": 198,
+    "broken": []
+  },
+  "runtime": [
+    {
+      "url": "http://127.0.0.1:3001/api/health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "url": "http://127.0.0.1:5173/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "url": "http://127.0.0.1:5173/api/health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "url": "http://127.0.0.1:5173/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "url": "http://127.0.0.1:5173/api/review/requests",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "url": "http://127.0.0.1:5173/api/unknown",
+      "status": 404,
+      "expected": 404
+    }
+  ],
+  "productCodeChanged": false,
+  "newCriticalFailure": null,
+  "openAcceptance": [
+    "3–5 genuine Code0/Kiro tasks and tool identity",
+    "Independent human code explanation",
+    "Normal-motion visual acceptance",
+    "Actual assessment email submission"
+  ],
+  "hosting": "Optional, not attempted",
+  "tests": {
+    "client": 16,
+    "server": 41,
+    "total": 57,
+    "failed": 0
+  },
+  "build": {
+    "passed": true,
+    "mainKb": 556.35,
+    "gzipKb": 179.15,
+    "advisory": "Non-failing main chunk >500 kB"
+  },
+  "audit": {
+    "vulnerabilities": 0,
+    "dependencies": 366
+  },
+  "acceptanceComplete": false
+}

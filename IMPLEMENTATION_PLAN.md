@@ -477,6 +477,8 @@ October 8: repository review/preparation verified; [local submission draft](docs
 
 Fix only failures that affect setup, core flow, authorization, data integrity, or submission. Reverify affected behavior and update the README/ledger if the final state changes. No new libraries, dashboards, integrations, or optional feature expansion.
 
+Recovery review completed locally: 57 tests pass, build succeeds, audit has zero vulnerabilities, 198 local documentation links resolve, and development readiness/authentication smoke checks pass. No new critical defect reproduced; no product code changed. [Evidence](docs/phase10-checks.json) and [ledger](docs/verification.md#phase-10--recovery-buffer-review). Reopen recovery only for a concrete failure or changes from later Kiro work. Earlier named-tool, full-motion/human acceptance and actual submission gates remain open.
+
 ## 15. AI usage workflow throughout the phases
 
 Use small tasks with explicit file ownership and acceptance criteria. Review the diff, understand the output, and verify before committing.
@@ -536,10 +538,10 @@ Keep one short tracker, rather than duplicating status across documents:
 | 4 | Verified complete | Phase 4 browser workflow commit; docs/verification.md | Browser flow retained and regression-tested |
 | 5 | Verified complete | Phase 5 core workflow commit; docs/verification.md | Core workflow retained and regression-tested |
 | 6 | Implemented but unverified in full | 43081be; responsive/a11y/reduced-motion evidence | Full-motion subjective walkthrough remains open |
-| 7 | Verified complete locally | docs/verification.md and phase7 checks/screenshots | Phase 8 documentation/fresh clone |
+| 7 | Verified complete locally | docs/verification.md and phase7 checks/screenshots | Correctness retained; Phase 8 clean-clone setup verified |
 | 8 | In progress | README, phase8-checks.json, clean-clone screenshot; 8d7cd1b setup repair | Genuine Code0/Kiro tasks and human explanation |
 | 9 | In progress | Public logged-out review, phase9-checks.json, submission-preparation.md | Finish Kiro/human gates; review final commit and deliberately submit |
-| 10 | Reserved | — | Critical recovery only |
+| 10 | Verified complete for current recovery review | phase10-checks.json; 57 tests/build/audit pass, no new critical defect | Reopen only for concrete failure or later code changes |
 
 States: Not started, In progress, Implemented but unverified, Verified complete, or Blocked with a concrete reason.
 
