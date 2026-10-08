@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { restoreFocus } from "@/lib/focus";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -107,7 +108,10 @@ export function DecisionPanel({ request, onSaved, onConflict }) {
         value={reason}
         readOnly={saving || Boolean(unconfirmed)}
         onChange={(event) => setReason(event.target.value)}
-        aria-invalid={Boolean(error)}
+        aria-invalid={
+          Boolean(error) &&
+          ([...reason.trim()].length < 10 || [...reason.trim()].length > 500)
+        }
         aria-describedby={
           error ? "decision-help decision-error" : "decision-help"
         }
@@ -162,7 +166,7 @@ export function DecisionPanel({ request, onSaved, onConflict }) {
             }}
             onCloseAutoFocus={(event) => {
               event.preventDefault();
-              opener.current?.focus();
+              restoreFocus(opener.current);
             }}
           >
             <DialogHeader>

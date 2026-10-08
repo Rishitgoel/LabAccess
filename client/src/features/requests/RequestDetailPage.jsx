@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { RequestDetailSkeleton } from "@/components/feedback/WorkflowSkeletons";
 import { AppShell } from "@/components/layout/AppShell";
 import { RouteState } from "@/components/feedback/RouteState";
 import { ResourceSummary } from "@/features/resources/ResourceCard";
@@ -19,6 +19,20 @@ export default function RequestDetailPage() {
     location = useLocation();
   const { data, loading, error, refresh } = useRequests("detail", id);
   const [notice, setNotice] = useState("");
+  const lastRevision = useRef();
+  const revision = data?.data?.revision;
+  useEffect(() => {
+    if (revision === undefined) return;
+    if (
+      (loading ||
+        (lastRevision.current !== undefined &&
+          lastRevision.current !== revision)) &&
+      document.activeElement === document.body
+    ) {
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    }
+    lastRevision.current = revision;
+  }, [revision, loading]);
   if (error && [400, 404].includes(error.status)) return <RouteState />;
   if (error?.status === 403) return <RouteState denied />;
   const back = location.state?.back?.startsWith(
@@ -34,25 +48,21 @@ export default function RequestDetailPage() {
       <Link className="workflow-back" to={back}>
         ← Back to {user.role === "reviewer" ? "review queue" : "my requests"}
       </Link>
-      {notice && (
-        <p
-          className={
-            notice.startsWith("This request") ? "auth-error" : "notice"
-          }
-          role="status"
-        >
-          {notice}
-        </p>
-      )}
-      {loading ? (
-        <Card
-          className="workflow-panel"
-          role="status"
-          aria-label="Loading request"
-        >
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-32 w-full" />
-        </Card>
+      <p
+        className={
+          !notice
+            ? "sr-only"
+            : notice.startsWith("This request")
+              ? "auth-error"
+              : "notice"
+        }
+        role="status"
+        aria-atomic="true"
+      >
+        {notice}
+      </p>
+      {loading && !data ? (
+        <RequestDetailSkeleton />
       ) : error ? (
         <Card className="feedback" role="alert">
           <h1>Request could not be loaded</h1>
@@ -119,7 +129,12 @@ export default function RequestDetailPage() {
                   <RequestTimeline request={item} />
                 </Card>
               </div>
-              {user.role === "reviewer" && item.status === "pending" ? (
+              {loading ? (
+                <Card className="workflow-panel" role="status">
+                  <h2>Updating saved state</h2>
+                  <p>Checking the latest request before another action.</p>
+                </Card>
+              ) : user.role === "reviewer" && item.status === "pending" ? (
                 <DecisionPanel
                   key={`${item.id}-${item.revision}`}
                   request={item}
@@ -160,7 +175,9 @@ export default function RequestDetailPage() {
                   }}
                 />
               ) : (
-                <Card className="workflow-panel outcome-panel">
+                <Card
+                  className={`workflow-panel outcome-panel${item.status === "approved" ? " outcome-panel--approved" : ""}`}
+                >
                   <StatusBadge status={item.status} />
                   <h2>
                     {item.status === "pending"

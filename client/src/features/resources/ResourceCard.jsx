@@ -52,19 +52,26 @@ export function ResourceSummary({ resource }) {
     </div>
   );
 }
-export function ResourceCard({ resource, status, role, onRequest, onView }) {
+export function ResourceCard({
+  resource,
+  status,
+  role,
+  onRequest,
+  onView,
+  actionsDisabled = false,
+}) {
   return (
     <Card className="resource-card">
       <ResourceSummary resource={resource} />
       <div className="resource-card__actions">
         {status && <StatusBadge status={status} />}
         {role === "learner" && !status && onRequest ? (
-          <Button onClick={onRequest}>
+          <Button onClick={onRequest} disabled={actionsDisabled}>
             Request access
             <ArrowRight aria-hidden="true" />
           </Button>
         ) : status ? (
-          <Button variant="ghost" onClick={onView}>
+          <Button variant="ghost" onClick={onView} disabled={actionsDisabled}>
             View request
             <ArrowRight aria-hidden="true" />
           </Button>

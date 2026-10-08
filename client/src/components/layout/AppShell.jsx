@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { entranceMotion } from "@/lib/motion";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "@/features/auth/SessionProvider";
 import { AppHeader } from "./AppHeader";
 export function AppShell({ children }) {
+  const reduced = useReducedMotion();
   const { user, logout } = useSession();
   const navigate = useNavigate();
   const [error, setError] = useState(""),
@@ -29,14 +32,22 @@ export function AppShell({ children }) {
         onLogout={signOut}
         logoutBusy={busy}
       />
-      <main className="page-container">
+      <motion.main
+        id="main-content"
+        tabIndex={-1}
+        className="page-container"
+        {...entranceMotion(reduced)}
+      >
+        <p className="sr-only" role="status">
+          {busy ? "Signing out…" : ""}
+        </p>
         {error && (
           <p role="alert" className="auth-error">
             {error}
           </p>
         )}
         {children}
-      </main>
+      </motion.main>
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 **Version:** 1.1  
 **Planning date:** October 8, 2026  
-**Status:** planning complete; implementation and acceptance checks are not yet complete.  
+**Status:** Phases 1–5 verified locally; Phase 6 implementation and reduced-motion checks verified. Full-motion visual acceptance, genuine Kiro evidence, and release phases remain open.
 **Requirements:** [PRD.md](PRD.md)  
 **Visual specification:** [DESIGN.md](DESIGN.md)  
 **Selected reference:** [sample-ui.png](sample-ui.png)  
@@ -357,26 +357,28 @@ October 8 evidence: [verification ledger](docs/verification.md#phase-5--complete
 
 ### Tasks
 
-- [ ] Apply shared tokens throughout auth, catalog, lists, queue, and details. Remove accidental indigo/sidebar styles.
-- [ ] Keep the decorative hero on the catalog only; transactional pages should prioritize content.
-- [ ] Convert tables to readable cards on small screens and stack detail/action columns.
-- [ ] Finish profile/logout menus, active navigation, focus rings, status icon/text, and concise labels.
-- [ ] Verify heading order, labels, validation associations, keyboard interactions, dialog focus, and accessible announcements.
-- [ ] Check text/background contrast; adjust tokens if necessary.
-- [ ] Add Motion presets: entrance 350ms/12px, cards stagger 60ms, hover lift 4px/180ms, press 100ms, filter 220ms, dialog 180–220ms.
-- [ ] Cap cumulative stagger delays. Use opacity/transforms and avoid expensive looping artwork.
-- [ ] Respect reduced motion and maintain focus independently of transitions.
-- [ ] Keep skeleton dimensions stable; avoid unnecessary spinner/full-page replacement on every refresh.
-- [ ] If time remains, implement search/category filtering completely; otherwise omit the reference's optional controls.
+- [x] Apply shared tokens throughout auth, catalog, lists, queue, and details. Remove accidental indigo/sidebar styles.
+- [x] Keep the decorative hero on the catalog only; transactional pages should prioritize content.
+- [x] Convert tables to readable cards on small screens and stack detail/action columns.
+- [x] Finish profile/logout menus, active navigation, focus rings, status icon/text, and concise labels.
+- [x] Verify heading order, labels, validation associations, keyboard interactions, dialog focus, and accessible announcements.
+- [x] Check text/background contrast; adjust tokens if necessary.
+- [x] Add Motion presets: entrance 350ms/12px, cards stagger 60ms, hover lift 4px/180ms, press 100ms, filter 220ms, dialog 180–220ms.
+- [x] Cap cumulative stagger delays. Use opacity/transforms and avoid expensive looping artwork.
+- [x] Respect reduced motion and maintain focus independently of transitions.
+- [x] Keep skeleton dimensions stable; avoid unnecessary spinner/full-page replacement on every refresh.
+- [x] If time remains, implement search/category filtering completely; otherwise omit the reference's optional controls.
 
 ### Exit gate
 
-- [ ] Review screenshots at approximately 375px, 768px, and 1440px.
-- [ ] No horizontal overflow or hidden primary actions.
-- [ ] Keyboard/reduced-motion walkthrough passes.
+- [x] Review screenshots at approximately 375px, 768px, and 1440px.
+- [x] No horizontal overflow or hidden primary actions.
+- [x] Keyboard/reduced-motion walkthrough passes.
 - [ ] Motion feels smooth on the tested device and never blocks interaction.
-- [ ] Every visible control has real behavior.
-- [ ] Record per-page screenshot comparisons in docs/verification.md and resolve material differences in palette, navigation, hierarchy, spacing, and action placement.
+- [x] Every visible control has real behavior.
+- [x] Record per-page screenshot comparisons in docs/verification.md and resolve material differences in palette, navigation, hierarchy, spacing, and action placement.
+
+October 8 evidence: [verification ledger](docs/verification.md#phase-6--responsive-accessibility-and-motion-october-8-2026). All 12 references compared at 375/768/1440; extra workflow checks at 320/1280. Lighthouse accessibility scores are 100, all 54 tests pass, and slow reads retain content with safe action/focus handling. Optional search/category controls omitted. **Full-motion visual smoothness remains unverified:** the browser/device reports reduced motion enabled. Preset implementation and reduced-motion interaction are verified separately; this phase is not marked fully accepted.
 
 **Suggested commit:** `feat: finish responsive warm UI and accessible motion`.
 

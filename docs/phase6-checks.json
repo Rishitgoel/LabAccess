@@ -1,0 +1,671 @@
+{
+  "environment": {
+    "date": "2026-10-08",
+    "platform": "Windows",
+    "topology": "built client and API on loopback 3002",
+    "reducedMotion": true
+  },
+  "tests": {
+    "client": 16,
+    "backend": 38,
+    "passed": 54
+  },
+  "build": {
+    "mainKB": 556.35,
+    "gzipKB": 179.15,
+    "largeChunkAdvisory": true
+  },
+  "lighthouse": {
+    "version": "13.5.0",
+    "pages": [
+      {
+        "name": "login",
+        "score": 1
+      },
+      {
+        "name": "register",
+        "score": 1
+      },
+      {
+        "name": "catalog",
+        "score": 1
+      },
+      {
+        "name": "my-requests",
+        "score": 1
+      },
+      {
+        "name": "pending",
+        "score": 1
+      },
+      {
+        "name": "resubmit",
+        "score": 1
+      },
+      {
+        "name": "approved",
+        "score": 1
+      },
+      {
+        "name": "queue",
+        "score": 1
+      },
+      {
+        "name": "decision",
+        "score": 1
+      },
+      {
+        "name": "denied",
+        "score": 1
+      },
+      {
+        "name": "not-found",
+        "score": 1
+      }
+    ],
+    "rejectedScore": 1,
+    "finalSharedHeaderChecks": [
+      {
+        "name": "login",
+        "score": 1,
+        "failed": []
+      },
+      {
+        "name": "approved",
+        "score": 1,
+        "failed": []
+      },
+      {
+        "name": "queue",
+        "score": 1,
+        "failed": []
+      }
+    ]
+  },
+  "contrast": [
+    {
+      "pair": "foreground / background",
+      "ratio": 14.52
+    },
+    {
+      "pair": "muted-foreground / background",
+      "ratio": 5.86
+    },
+    {
+      "pair": "muted-foreground / soft-surface",
+      "ratio": 4.98
+    },
+    {
+      "pair": "olive / card",
+      "ratio": 6.93
+    },
+    {
+      "pair": "approved-text / approved-bg",
+      "ratio": 8.7
+    },
+    {
+      "pair": "pending-text / pending-bg",
+      "ratio": 5.98
+    },
+    {
+      "pair": "rejected-text / rejected-bg",
+      "ratio": 6.18
+    },
+    {
+      "pair": "cancelled-text / cancelled-bg",
+      "ratio": 6.2
+    },
+    {
+      "pair": "control-border / card",
+      "ratio": 3.51
+    }
+  ],
+  "browser": [
+    {
+      "name": "02-login-375",
+      "focus": "MAIN",
+      "heading": [
+        "Welcome back"
+      ],
+      "reduced": true,
+      "scroll": 375,
+      "width": 375
+    },
+    {
+      "name": "01-resources-375",
+      "focus": "MAIN",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "04-request-dialog-375",
+      "focus": "TEXTAREA",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 375,
+      "width": 375
+    },
+    {
+      "name": "01-resources-768",
+      "focus": "MAIN",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "04-request-dialog-768",
+      "focus": "TEXTAREA",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 768,
+      "width": 768
+    },
+    {
+      "name": "01-resources-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "04-request-dialog-1440",
+      "focus": "TEXTAREA",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 1440,
+      "width": 1440
+    },
+    {
+      "name": "05-my-requests-1440",
+      "focus": "MAIN",
+      "heading": [
+        "My requests"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "06-learner-pending-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "07-learner-resubmit-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 03"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "10-learner-approved-1440",
+      "focus": "MAIN",
+      "heading": [
+        "MongoDB Learning Cluster"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "11-access-denied-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Access denied"
+      ],
+      "reduced": true,
+      "scroll": 1440,
+      "width": 1440
+    },
+    {
+      "name": "12-not-found-1440",
+      "focus": "MAIN",
+      "heading": [
+        "We could not find that page"
+      ],
+      "reduced": true,
+      "scroll": 1440,
+      "width": 1440
+    },
+    {
+      "name": "05-my-requests-768",
+      "focus": "MAIN",
+      "heading": [
+        "My requests"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "06-learner-pending-768",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "07-learner-resubmit-768",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 03"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "10-learner-approved-768",
+      "focus": "MAIN",
+      "heading": [
+        "MongoDB Learning Cluster"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "11-access-denied-768",
+      "focus": "MAIN",
+      "heading": [
+        "Access denied"
+      ],
+      "reduced": true,
+      "scroll": 768,
+      "width": 768
+    },
+    {
+      "name": "12-not-found-768",
+      "focus": "MAIN",
+      "heading": [
+        "We could not find that page"
+      ],
+      "reduced": true,
+      "scroll": 768,
+      "width": 768
+    },
+    {
+      "name": "05-my-requests-375",
+      "focus": "MAIN",
+      "heading": [
+        "My requests"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "06-learner-pending-375",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "07-learner-resubmit-375",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 03"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "10-learner-approved-375",
+      "focus": "MAIN",
+      "heading": [
+        "MongoDB Learning Cluster"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "11-access-denied-375",
+      "focus": "MAIN",
+      "heading": [
+        "Access denied"
+      ],
+      "reduced": true,
+      "scroll": 375,
+      "width": 375
+    },
+    {
+      "name": "12-not-found-375",
+      "focus": "MAIN",
+      "heading": [
+        "We could not find that page"
+      ],
+      "reduced": true,
+      "scroll": 375,
+      "width": 375
+    },
+    {
+      "name": "08-review-queue-375",
+      "focus": "MAIN",
+      "heading": [
+        "Review queue"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "09-reviewer-decision-375",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "08-review-queue-768",
+      "focus": "MAIN",
+      "heading": [
+        "Review queue"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "09-reviewer-decision-768",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "08-review-queue-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Review queue"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "09-reviewer-decision-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "07-learner-rejected-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 04"
+      ],
+      "reduced": true,
+      "scroll": 1425,
+      "width": 1440
+    },
+    {
+      "name": "07-learner-rejected-768",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 04"
+      ],
+      "reduced": true,
+      "scroll": 753,
+      "width": 768
+    },
+    {
+      "name": "07-learner-rejected-375",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 04"
+      ],
+      "reduced": true,
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "name": "03-registration-375",
+      "focus": "MAIN",
+      "heading": [
+        "Create your account"
+      ],
+      "reduced": true,
+      "scroll": 375,
+      "width": 375
+    },
+    {
+      "name": "03-registration-768",
+      "focus": "MAIN",
+      "heading": [
+        "Create your account"
+      ],
+      "reduced": true,
+      "scroll": 768,
+      "width": 768
+    },
+    {
+      "name": "02-login-768",
+      "focus": "MAIN",
+      "heading": [
+        "Welcome back"
+      ],
+      "reduced": true,
+      "scroll": 768,
+      "width": 768
+    },
+    {
+      "name": "02-login-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Welcome back"
+      ],
+      "reduced": true,
+      "scroll": 1440,
+      "width": 1440
+    },
+    {
+      "name": "03-registration-1440",
+      "focus": "MAIN",
+      "heading": [
+        "Create your account"
+      ],
+      "reduced": true,
+      "scroll": 1440,
+      "width": 1440
+    },
+    {
+      "name": "01-resources-320",
+      "focus": "MAIN",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "name": "05-my-requests-320",
+      "focus": "MAIN",
+      "heading": [
+        "My requests"
+      ],
+      "reduced": true,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "name": "07-learner-rejected-320",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 04"
+      ],
+      "reduced": true,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "name": "10-learner-approved-320",
+      "focus": "MAIN",
+      "heading": [
+        "MongoDB Learning Cluster"
+      ],
+      "reduced": true,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "name": "01-resources-1280",
+      "focus": "MAIN",
+      "heading": [
+        "Your next skillstarts here."
+      ],
+      "reduced": true,
+      "scroll": 1265,
+      "width": 1280
+    },
+    {
+      "name": "05-my-requests-1280",
+      "focus": "MAIN",
+      "heading": [
+        "My requests"
+      ],
+      "reduced": true,
+      "scroll": 1265,
+      "width": 1280
+    },
+    {
+      "name": "07-learner-rejected-1280",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 04"
+      ],
+      "reduced": true,
+      "scroll": 1265,
+      "width": 1280
+    },
+    {
+      "name": "10-learner-approved-1280",
+      "focus": "MAIN",
+      "heading": [
+        "MongoDB Learning Cluster"
+      ],
+      "reduced": true,
+      "scroll": 1265,
+      "width": 1280
+    },
+    {
+      "name": "08-review-queue-320",
+      "focus": "MAIN",
+      "heading": [
+        "Review queue"
+      ],
+      "reduced": true,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "name": "09-reviewer-decision-320",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "name": "08-review-queue-1280",
+      "focus": "MAIN",
+      "heading": [
+        "Review queue"
+      ],
+      "reduced": true,
+      "scroll": 1265,
+      "width": 1280
+    },
+    {
+      "name": "09-reviewer-decision-1280",
+      "focus": "MAIN",
+      "heading": [
+        "Phase 5 Practice 02"
+      ],
+      "reduced": true,
+      "scroll": 1265,
+      "width": 1280
+    },
+    {
+      "name": "02-login-320",
+      "focus": "MAIN",
+      "heading": [
+        "Welcome back"
+      ],
+      "reduced": true,
+      "scroll": 320,
+      "width": 320
+    },
+    {
+      "name": "02-login-1280",
+      "focus": "MAIN",
+      "heading": [
+        "Welcome back"
+      ],
+      "reduced": true,
+      "scroll": 1280,
+      "width": 1280
+    },
+    {
+      "name": "03-registration-1280",
+      "focus": "MAIN",
+      "heading": [
+        "Create your account"
+      ],
+      "reduced": true,
+      "scroll": 1280,
+      "width": 1280
+    }
+  ],
+  "open": [
+    "Normal-motion subjective visual smoothness",
+    "Phase 7 integrated release acceptance",
+    "Genuine Kiro task evidence",
+    "Public HTTPS deployment"
+  ]
+}

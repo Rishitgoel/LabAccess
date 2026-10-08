@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { restoreFocus } from "@/lib/focus";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -132,7 +133,11 @@ export function LearnerActions({ request, onSaved, onConflict }) {
             value={reason}
             readOnly={saving || Boolean(unconfirmed)}
             onChange={(event) => setReason(event.target.value)}
-            aria-invalid={Boolean(error)}
+            aria-invalid={
+              Boolean(error) &&
+              ([...reason.trim()].length < 20 ||
+                [...reason.trim()].length > 1000)
+            }
             aria-describedby={
               error ? "resubmit-help learner-action-error" : "resubmit-help"
             }
@@ -179,7 +184,7 @@ export function LearnerActions({ request, onSaved, onConflict }) {
             }}
             onCloseAutoFocus={(event) => {
               event.preventDefault();
-              opener.current?.focus();
+              restoreFocus(opener.current);
             }}
           >
             <DialogHeader>

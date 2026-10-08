@@ -8,6 +8,7 @@ import CatalogPage from "@/features/resources/CatalogPage";
 import RequestListPage from "@/features/requests/RequestListPage";
 import RequestDetailPage from "@/features/requests/RequestDetailPage";
 import { RouteState } from "@/components/feedback/RouteState";
+import { RouteFocus } from "@/components/layout/RouteFocus";
 const PreviewCatalog = React.lazy(() => import("./PreviewCatalog"));
 import { Button } from "@/components/ui/button";
 import "@fontsource/inter/400.css";
@@ -19,13 +20,18 @@ function Guard({ publicPage, role, children }) {
   const { loading, user, error, refresh } = useSession();
   if (loading)
     return (
-      <main className="session-state" role="status">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="session-state"
+        role="status"
+      >
         Checking your session…
       </main>
     );
   if (error)
     return (
-      <main className="session-state">
+      <main id="main-content" tabIndex={-1} className="session-state">
         <h1>Could not connect</h1>
         <p role="alert">{error.message}</p>
         <Button onClick={refresh}>Try again</Button>
@@ -41,6 +47,7 @@ function App() {
     <MotionConfig reducedMotion="user">
       <BrowserRouter>
         <SessionProvider>
+          <RouteFocus />
           <Routes>
             <Route
               path="/requests"

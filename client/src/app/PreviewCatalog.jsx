@@ -50,7 +50,7 @@ export default function PreviewCatalog() {
         onOptions={(opener) => setDialog({ type: "options", opener })}
         onReset={reset}
       />
-      <main className="page-container">
+      <main id="main-content" tabIndex={-1} className="page-container">
         <CatalogHero role={role} onViewRequests={openList} />
         <div className="catalog-heading">
           <div>

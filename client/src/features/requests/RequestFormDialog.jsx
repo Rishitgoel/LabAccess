@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { restoreFocus } from "@/lib/focus";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,7 +85,7 @@ export function RequestFormDialog({
         }}
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          openingControl?.focus();
+          restoreFocus(openingControl);
         }}
         onEscapeKeyDown={(event) => {
           if (saving || unconfirmed) event.preventDefault();
@@ -114,7 +115,7 @@ export function RequestFormDialog({
             }}
             readOnly={saving || unconfirmed}
             placeholder="Describe what you want to learn or build…"
-            aria-invalid={!!error}
+            aria-invalid={Boolean(error) && (count < 20 || count > 1000)}
             aria-describedby={`reason-help${error ? " reason-error" : ""}`}
           />
           <div id="reason-help" className="field-help">

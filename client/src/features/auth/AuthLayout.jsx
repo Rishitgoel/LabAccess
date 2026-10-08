@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "motion/react";
+import { entranceMotion } from "@/lib/motion";
 import { AppHeader } from "@/components/layout/AppHeader";
 export function AuthLayout({ registration, children }) {
+  const reduced = useReducedMotion();
   return (
     <>
       <AppHeader publicPage registration={registration} />
-      <main className="auth-container">
-        <section className="auth-card">
+      <main id="main-content" tabIndex={-1} className="auth-container">
+        <motion.section className="auth-card" {...entranceMotion(reduced)}>
           <div className="auth-art" aria-hidden="true">
             <h2>
               {registration ? (
@@ -34,7 +37,7 @@ export function AuthLayout({ registration, children }) {
               </Link>
             </p>
           </div>
-        </section>
+        </motion.section>
       </main>
     </>
   );

@@ -1,14 +1,18 @@
 import { useEffect } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { motionTiming } from "@/lib/motion";
 import { Link, useSearchParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { RequestListSkeleton } from "@/components/feedback/WorkflowSkeletons";
+import { StatusFilters } from "./StatusFilters";
 import { StatusBadge } from "./StatusBadge";
 import { useRequests } from "./useRequests";
 import { formatDate } from "@/lib/dates";
-import { readListQuery, requestStatuses, availablePage } from "./list-query";
+import { readListQuery, availablePage } from "./list-query";
 export default function RequestListPage({ review = false }) {
+  const reduced = useReducedMotion();
   const [params, setParams] = useSearchParams();
   const { page, status } = readListQuery(params, review);
   const { data, loading, error, refresh } = useRequests(
@@ -41,31 +45,19 @@ export default function RequestListPage({ review = false }) {
           Browse resources →
         </Link>
       </div>
-      <div
-        className="status-filters"
-        role="group"
-        aria-label="Filter requests by status"
-      >
-        {requestStatuses.map((value) => (
-          <Button
-            key={value}
-            variant={status === value ? "default" : "outline"}
-            aria-pressed={status === value}
-            onClick={() => setParams({ status: value, page: "1" })}
-          >
-            {value[0].toUpperCase() + value.slice(1)}
-          </Button>
-        ))}
-      </div>
-      {loading ? (
-        <Card
-          className="workflow-panel"
-          role="status"
-          aria-label="Loading requests"
-        >
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-16 w-full" />
-        </Card>
+      <StatusFilters
+        status={status}
+        onChange={(value) => setParams({ status: value, page: "1" })}
+      />
+      <p className="sr-only" role="status" aria-atomic="true">
+        {loading
+          ? "Loading requests"
+          : data
+            ? `${data.pagination.total} ${status === "all" ? "" : status + " "}requests. Page ${page}.`
+            : ""}
+      </p>
+      {loading && !data ? (
+        <RequestListSkeleton />
       ) : error ? (
         <Card className="feedback" role="alert">
           <h2>Requests could not be loaded</h2>
@@ -85,7 +77,13 @@ export default function RequestListPage({ review = false }) {
           <Link to="/">Browse resources</Link>
         </Card>
       ) : (
-        <div className="request-table">
+        <motion.div
+          key={`${status}-${page}`}
+          className="request-table"
+          initial={reduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: reduced ? 0 : motionTiming.filter }}
+        >
           <table>
             <caption className="sr-only">
               {review ? "Learner requests" : "Your access requests"}
@@ -147,7 +145,7 @@ export default function RequestListPage({ review = false }) {
               ))}
             </tbody>
           </table>
-        </div>
+        </motion.div>
       )}
       {data?.pagination && (
         <nav className="pagination" aria-label="Request pages">

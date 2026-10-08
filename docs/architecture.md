@@ -56,3 +56,13 @@ Actions send the current revision once and reuse saved-state reconciliation. Rec
 Lists store status/page in query parameters, defaulting to all for learners and pending for reviewers. Filter changes reset to page one; an out-of-range page clamps to the last available page, or one for empty results. Details/back retains the list query. The server retains latest-first learner ordering and oldest-first pending reviews. Hook results carry their query identity, so prior filter/page data cannot clamp the new query or briefly render old rows as a new result.
 
 If a protected mutation fails CSRF validation, the client clears its token and reads the current session. An expired session opens sign-in with a clear message; a still-authenticated session keeps the original error for a deliberate action. The rejected mutation is never replayed automatically.
+
+## Phase 6 presentation and focus
+
+Shared CSS tokens cover forms, navigation, workflow cards, statuses, control borders, and olive focus rings. Tables become labelled cards below 600px; detail panels stack there. Transactional pages omit catalog artwork. Authentication keeps the reference's separate decorative art panel, hidden on small screens.
+
+Motion presets own 350ms/12px entrances, 60ms card stagger capped at 240ms, and 220ms filter changes. CSS supplies 180ms hover lift, 100ms press, and 200ms dialog opening. MotionConfig and useReducedMotion remove travel, delays, and filter fades when requested; the CSS media query removes hover/press travel and dialog/skeleton animation. Dialog dismissal restores focus immediately rather than waiting for an exit effect.
+
+RouteFocus follows pathname and session readiness, focuses the main landmark without scrolling it into an arbitrary position, and returns the viewport to the top. Query-only filter changes preserve the focused filter. Dialog focus returns to a usable opener or the main landmark when the opener was disabled/removed. Detail refreshes also recover focus when their action panel disappears. Focus handling is independent of animation completion.
+
+Read hooks retain successful data only for the same query. A new filter/page/detail hides old query data; failures clear it and show controlled recovery. Same-query catalog refreshes keep cards visible but disable their actions. Detail refreshes keep context/history and replace only the action panel with an explicit saved-state check. Matching initial skeletons remain for reads without prior data. These rules preserve the existing ownership, revision, and uncertain-write contracts.

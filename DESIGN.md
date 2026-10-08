@@ -1,6 +1,6 @@
 # LabAccess — Warm Modern UI Design
 
-**Status:** implementation specification; application not yet built.  
+**Status:** implemented locally through Phase 6; responsive, keyboard, contrast, and reduced-motion checks recorded in [verification](docs/verification.md). Full-motion visual acceptance remains open.
 **Selected reference:** [sample-ui.png](sample-ui.png).  
 **Production artwork:** [assets/labaccess-hero.png](assets/labaccess-hero.png).  
 **All page references:** [docs/UI_REFERENCE_GUIDE.md](docs/UI_REFERENCE_GUIDE.md).  

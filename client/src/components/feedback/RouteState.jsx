@@ -24,6 +24,8 @@ export function RouteState({ denied = false }) {
   return user ? (
     <AppShell>{content}</AppShell>
   ) : (
-    <main className="page-container">{content}</main>
+    <main id="main-content" tabIndex={-1} className="page-container">
+      {content}
+    </main>
   );
 }

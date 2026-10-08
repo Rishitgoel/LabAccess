@@ -87,12 +87,19 @@ export default function CatalogPage() {
           </p>
         </div>
       </div>
-      {notice && (
-        <p role="status" className="notice">
-          {notice}
+      <p
+        role="status"
+        aria-atomic="true"
+        className={notice ? "notice" : "sr-only"}
+      >
+        {notice}
+      </p>
+      {loading && catalog.hasData && requests.data && (
+        <p role="status" className="refresh-status">
+          Updating saved requests…
         </p>
       )}
-      {loading ? (
+      {loading && (!catalog.hasData || !requests.data) ? (
         <ResourceSkeletons />
       ) : error ? (
         <ErrorState message={error.message} onRetry={retry} />
@@ -101,6 +108,7 @@ export default function CatalogPage() {
           resources={catalog.resources}
           requests={mapping}
           role={user.role}
+          actionsDisabled={loading}
           onRequest={
             user.role === "learner"
               ? (resource, opener) => setDialog({ resource, opener })
@@ -120,7 +128,7 @@ export default function CatalogPage() {
         <nav className="pagination" aria-label="Resource pages">
           <Button
             variant="outline"
-            disabled={page === 1}
+            disabled={loading || page === 1}
             onClick={() => setPage(page - 1)}
           >
             Previous
@@ -130,7 +138,7 @@ export default function CatalogPage() {
           </span>
           <Button
             variant="outline"
-            disabled={page >= catalog.pagination.totalPages}
+            disabled={loading || page >= catalog.pagination.totalPages}
             onClick={() => setPage(page + 1)}
           >
             Next

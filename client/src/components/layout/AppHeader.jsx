@@ -23,13 +23,26 @@ export function AppHeader({
 }) {
   const profile = useRef(null);
   const { pathname } = useLocation();
+  const profileName = user?.name ?? `Demo ${role}`;
+  const initials = profileName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
   return (
     <header className="app-header">
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <div className="app-header__inner">
-        <a href="/" className="brand" aria-label="LabAccess resources">
-          <span className="brand__mark">LA</span>
+        <Link to="/" className="brand" aria-label="LA LabAccess resources">
+          <span className="brand__mark" aria-hidden="true">
+            LA
+          </span>
+          {" "}
           <span>LabAccess</span>
-        </a>
+        </Link>
         {publicPage ? (
           <div className="public-nav">
             <span>{registration ? "Already a member?" : "New here?"}</span>
@@ -51,7 +64,12 @@ export function AppHeader({
                 <Link
                   className="nav-link"
                   to={role === "reviewer" ? "/review" : "/requests"}
-                  aria-current={pathname !== "/" ? "page" : undefined}
+                  aria-current={
+                    pathname.startsWith("/requests") ||
+                    (role === "reviewer" && pathname === "/review")
+                      ? "page"
+                      : undefined
+                  }
                 >
                   {role === "reviewer" ? "Review queue" : "My requests"}
                 </Link>
@@ -73,22 +91,14 @@ export function AppHeader({
                   ref={profile}
                   className="profile-button"
                   variant="ghost"
-                  aria-label={
-                    user ? "Open profile menu" : "Open demo profile menu"
-                  }
+                  disabled={logoutBusy}
+                  aria-label={`${initials} ${profileName}, open profile menu`}
                 >
                   <span className="avatar">
-                    {user
-                      ? user.name
-                          .split(" ")
-                          .filter(Boolean)
-                          .slice(0, 2)
-                          .map((part) => part[0])
-                          .join("")
-                      : "DL"}
+                    {initials}
                   </span>
                   <span className="profile-button__name">
-                    {user?.name ?? `Demo ${role}`}
+                    {profileName}
                   </span>
                   <ChevronDown aria-hidden="true" />
                 </Button>

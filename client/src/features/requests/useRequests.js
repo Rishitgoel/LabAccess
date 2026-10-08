@@ -11,7 +11,12 @@ export function useRequests(kind, value, status) {
   const [version, setVersion] = useState(0);
   useEffect(() => {
     let current = true;
-    setState({ key, loading: true, data: null, error: null });
+    setState((previous) => ({
+      key,
+      loading: true,
+      data: previous.key === key ? previous.data : null,
+      error: null,
+    }));
     const read =
       kind === "catalog"
         ? value

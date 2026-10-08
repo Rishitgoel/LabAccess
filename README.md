@@ -2,9 +2,9 @@
 
 A MERN learning-resource request and review application. Approval records a decision; it does not provision external access.
 
-**Current state: Phase 5 verified locally.** Learners can request, cancel pending requests with confirmation, and update/resubmit rejected or cancelled requests. Reviewers approve or reject with a reason and confirmation. Both lists support all required status filters and pagination; details/back preserves filters and recovers pages emptied by mutations. Complete history persists across refreshes, approved requests are read-only, and uncertain writes are reconciled before another action. `/preview` is an explicitly unsaved design demonstration. Integrated polish, fresh-clone/release acceptance, genuine Kiro evidence, and hosting remain open.
+**Current state: Phase 6 implementation verified locally; full-motion visual acceptance remains open.** The complete learner/reviewer workflow now has responsive layouts, keyboard/focus handling, accessible announcements, shared motion presets, and retained content during refreshes. All 12 reference pages were compared at 375/768/1440px; Lighthouse accessibility scores are 100. The tested device has reduced motion enabled, so normal-motion smoothness is not claimed. Optional search/category controls remain omitted. `/preview` is an explicitly unsaved design demonstration. Integrated release validation, fresh-clone acceptance, genuine Kiro evidence, and hosting remain open.
 
-![Approved request](docs/screenshots/phase4-learner-approved-desktop.png)
+![Approved request](docs/screenshots/phase6/10-learner-approved-1440.png)
 
 ## Setup
 
