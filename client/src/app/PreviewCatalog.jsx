@@ -93,6 +93,7 @@ export default function PreviewCatalog() {
       </main>
       {dialog?.type === "request" ? (
         <RequestFormDialog
+          preview
           key={dialog.resource.id}
           resource={dialog.resource}
           openingControl={dialog.opener}

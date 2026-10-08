@@ -30,7 +30,16 @@ export function ResourceIcon({ type }) {
 export function ResourceSummary({ resource }) {
   return (
     <div className="resource-summary">
-      <ResourceIcon type={resource.icon} />
+      <ResourceIcon
+        type={
+          resource.icon ??
+          (resource.category === "Data"
+            ? "database"
+            : resource.category === "Design"
+              ? "design"
+              : "code")
+        }
+      />
       <div>
         <p className="eyebrow">{resource.category}</p>
         <h3>{resource.name}</h3>

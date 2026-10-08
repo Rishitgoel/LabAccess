@@ -135,6 +135,7 @@ test("creation derives owner, trims reason, and records only server history", as
       fromStatus: null,
       toStatus: "pending",
       actorId: learner.user.id,
+      actorName: learner.user.name,
       reason,
       at: data.submittedAt,
     },

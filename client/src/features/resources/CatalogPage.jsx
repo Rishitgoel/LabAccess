@@ -1,93 +1,154 @@
 import { useState } from "react";
-import { AppHeader } from "@/components/layout/AppHeader";
+import { useNavigate } from "react-router-dom";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ResourceSkeletons, ErrorState } from "@/components/feedback/States";
 import { useSession } from "@/features/auth/SessionProvider";
+import { useRequests } from "@/features/requests/useRequests";
+import { RequestFormDialog } from "@/features/requests/RequestFormDialog";
+import {
+  loadAllMine,
+  requestApi,
+  saveAndReconcile,
+} from "@/features/requests/requests.api";
 import { CatalogHero } from "./CatalogHero";
 import { ResourceGrid } from "./ResourceGrid";
 import { useResources } from "./useResources";
 export default function CatalogPage() {
-  const { user, logout } = useSession();
+  const { user } = useSession(),
+    navigate = useNavigate();
   const [page, setPage] = useState(1),
-    [logoutError, setLogoutError] = useState(""),
-    [busy, setBusy] = useState(false);
-  const { loading, resources, pagination, error, retry } = useResources(page);
-  async function signOut() {
-    setBusy(true);
-    setLogoutError("");
+    [dialog, setDialog] = useState(null),
+    [notice, setNotice] = useState("");
+  const catalog = useResources(page),
+    requests = useRequests("catalog", user.role === "learner");
+  const loading = catalog.loading || requests.loading,
+    error = catalog.error ?? requests.error;
+  const mapping = Object.fromEntries(
+    (requests.data ?? []).map((item) => [item.resourceId, item]),
+  );
+  function retry() {
+    catalog.retry();
+    requests.refresh();
+  }
+  async function existing(resource) {
+    return (await loadAllMine()).find(
+      (item) => item.resourceId === resource.id,
+    );
+  }
+  async function submit(resource, reason) {
     try {
-      await logout();
+      const result = await saveAndReconcile(
+        () => requestApi.create(resource.id, reason),
+        () => existing(resource),
+        (saved) => saved.reason === reason,
+      );
+      setNotice(
+        result.reconciled
+          ? "Saved request found and verified."
+          : "Request saved. Your reviewer can now see it.",
+      );
+      requests.refresh();
     } catch (failure) {
-      setLogoutError(failure.message);
-    } finally {
-      setBusy(false);
+      if (failure.status === 409) {
+        requests.refresh();
+        setNotice(
+          "A request already exists. Open its saved details from the catalog.",
+        );
+      }
+      throw failure;
     }
   }
+  async function checkSaved(resource) {
+    const saved = await existing(resource);
+    requests.refresh();
+    if (saved) {
+      navigate(`/requests/${saved.id}`);
+      return true;
+    }
+    return false;
+  }
   return (
-    <>
-      <AppHeader
-        user={user}
+    <AppShell>
+      <CatalogHero
         role={user.role}
-        onLogout={signOut}
-        logoutBusy={busy}
+        onViewRequests={() =>
+          navigate(user.role === "reviewer" ? "/review" : "/requests")
+        }
       />
-      <main className="page-container">
-        <CatalogHero role={user.role} />
-        <div className="catalog-heading">
-          <div>
-            <h2>Explore resources</h2>
-            <p>
-              {loading
-                ? "Loading resources…"
-                : `${pagination?.total ?? 0} resources`}
-            </p>
-          </div>
-        </div>
-        {logoutError && (
-          <p role="alert" className="auth-error">
-            {logoutError}
-          </p>
-        )}
-        {loading ? (
-          <ResourceSkeletons />
-        ) : error ? (
-          <ErrorState message={error.message} onRetry={retry} />
-        ) : resources.length ? (
-          <ResourceGrid resources={resources} requests={{}} role={user.role} />
-        ) : (
-          <Card className="feedback">
-            <h3>No resources to show</h3>
-            <p>Check back when your learning catalog has been updated.</p>
-          </Card>
-        )}
-        {pagination?.totalPages > 1 && (
-          <nav className="pagination" aria-label="Resource pages">
-            <Button
-              variant="outline"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Previous
-            </Button>
-            <span>
-              Page {page} of {pagination.totalPages}
-            </span>
-            <Button
-              variant="outline"
-              disabled={page >= pagination.totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              Next
-            </Button>
-          </nav>
-        )}
-        <footer className="catalog-footer">
+      <div className="catalog-heading">
+        <div>
+          <h2>Explore resources</h2>
           <p>
-            Request submission and review will be connected in the next phases.
+            {loading
+              ? "Loading resources…"
+              : `${catalog.pagination?.total ?? 0} resources`}
           </p>
-        </footer>
-      </main>
-    </>
+        </div>
+      </div>
+      {notice && (
+        <p role="status" className="notice">
+          {notice}
+        </p>
+      )}
+      {loading ? (
+        <ResourceSkeletons />
+      ) : error ? (
+        <ErrorState message={error.message} onRetry={retry} />
+      ) : catalog.resources.length ? (
+        <ResourceGrid
+          resources={catalog.resources}
+          requests={mapping}
+          role={user.role}
+          onRequest={
+            user.role === "learner"
+              ? (resource, opener) => setDialog({ resource, opener })
+              : undefined
+          }
+          onView={(resource) =>
+            navigate(`/requests/${mapping[resource.id].id}`)
+          }
+        />
+      ) : (
+        <Card className="feedback">
+          <h3>No resources to show</h3>
+          <p>Check back when your learning catalog has been updated.</p>
+        </Card>
+      )}
+      {catalog.pagination?.totalPages > 1 && (
+        <nav className="pagination" aria-label="Resource pages">
+          <Button
+            variant="outline"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            Previous
+          </Button>
+          <span>
+            Page {page} of {catalog.pagination.totalPages}
+          </span>
+          <Button
+            variant="outline"
+            disabled={page >= catalog.pagination.totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </Button>
+        </nav>
+      )}
+      <footer className="catalog-footer">
+        <p>Access decisions are managed by your reviewer.</p>
+      </footer>
+      {dialog && (
+        <RequestFormDialog
+          resource={dialog.resource}
+          openingControl={dialog.opener}
+          onClose={() => setDialog(null)}
+          onSubmit={submit}
+          onCheckSaved={checkSaved}
+        />
+      )}
+    </AppShell>
   );
 }

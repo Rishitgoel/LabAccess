@@ -51,7 +51,7 @@ All routes are prefixed `/api`. Only health and CSRF bootstrap are public reads.
 | GET `/review/requests` | `status,page,pageSize` | reviewer list; default pending |
 | POST `/review/requests/:id/decision` | `{revision,status,reason}` | reviewer pending → approved/rejected |
 
-Resource fields: `id,name,description,category,eligibility,isActive`. Request fields: `id,resourceId,learnerId,reason,status,submittedAt,decisionReason,revision,history,createdAt,updatedAt`, with explicit safe resource/learner projections as needed by the view. No populated password/session fields. History events contain `action,fromStatus,toStatus,actorId,reason,at`; initial fromStatus is null. Dates are ISO 8601 UTC strings. UI formats them consistently in Asia/Kolkata as `08 Oct 2026, 5:30 PM IST` using a shared formatter.
+Resource fields: `id,name,description,category,eligibility,isActive`. Request fields: `id,resourceId,learnerId,reason,status,submittedAt,decisionReason,revision,history,createdAt,updatedAt`, with explicit safe resource/learner projections as needed by the view. No populated password/session fields. History events contain `action,fromStatus,toStatus,actorId,reason,at` and the additive DTO field `actorName`; initial fromStatus is null. `actorName` resolves the current public account name, or null for a removed account; it is not an immutable historical name snapshot. Stored actor IDs/events remain unchanged. Dates are ISO 8601 UTC strings. UI formats them consistently in Asia/Kolkata as `08 Oct 2026, 5:30 pm IST` using a shared formatter.
 
 ## Pagination and ordering
 

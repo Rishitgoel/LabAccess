@@ -783,3 +783,241 @@ p {
     margin-bottom: 24px;
   }
 }
+
+.workflow-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 40px 0 28px;
+}
+.workflow-heading h1,
+.route-state h1 {
+  font-size: 2.125rem;
+  line-height: 1.2;
+  margin: 0;
+}
+.workflow-heading p {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  margin: 12px 0 0;
+}
+.text-action {
+  color: var(--foreground);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+.text-action:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.workflow-back {
+  display: inline-block;
+  margin-top: 32px;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+.workflow-panel {
+  padding: 28px;
+  gap: 16px;
+  margin-bottom: 24px;
+  min-width: 0;
+}
+.workflow-panel h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+.workflow-panel p {
+  margin: 0;
+}
+.workflow-panel hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 12px 0;
+}
+.request-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.detail-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.preserved-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.request-table {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.request-table table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+.request-table th {
+  background: var(--soft-surface);
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 20px;
+}
+.request-table td {
+  border-top: 1px solid var(--border);
+  padding: 24px 20px;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+.request-table strong {
+  display: block;
+  font-weight: 500;
+}
+.request-table small {
+  display: block;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+.request-timeline {
+  list-style: none;
+  padding: 0 0 0 20px;
+  margin: 0;
+}
+.request-timeline li {
+  border-left: 1px solid var(--border);
+  padding: 0 0 24px 24px;
+  position: relative;
+}
+.request-timeline li::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--olive);
+}
+.request-timeline h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.request-timeline p {
+  font-size: 0.875rem;
+  margin: 8px 0;
+}
+.request-timeline time {
+  color: var(--muted-foreground);
+}
+.decision-panel label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.decision-panel textarea {
+  min-height: 160px;
+}
+.decision-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.outcome-panel {
+  background: var(--soft-surface);
+}
+.route-state {
+  max-width: 760px;
+  margin: 96px auto;
+  padding: 48px;
+  align-items: center;
+  text-align: center;
+  background: var(--soft-surface);
+}
+.route-state svg {
+  color: var(--olive);
+}
+.route-state p {
+  margin: 0;
+  color: var(--muted-foreground);
+}
+@media (max-width: 900px) {
+  .request-detail-grid {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  }
+  .workflow-panel {
+    padding: 20px;
+  }
+  .request-table th,
+  .request-table td {
+    padding: 16px 12px;
+  }
+}
+@media (max-width: 600px) {
+  .workflow-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .workflow-heading h1,
+  .route-state h1 {
+    font-size: 1.875rem;
+  }
+  .request-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .request-table table,
+  .request-table tbody,
+  .request-table tr,
+  .request-table td {
+    display: block;
+    width: 100%;
+  }
+  .request-table thead {
+    display: none;
+  }
+  .request-table tr + tr {
+    border-top: 1px solid var(--border);
+  }
+  .request-table td {
+    border: 0;
+    padding: 10px 20px;
+  }
+  .request-table td::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+  }
+  .request-table tr {
+    padding: 12px 0;
+  }
+  .route-state {
+    margin: 48px auto;
+    padding: 28px 20px;
+  }
+  .pagination {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}
+.workflow-panel {
+  border-color: var(--border);
+  box-shadow: none;
+}
+.route-state {
+  border-color: var(--border);
+  box-shadow: none;
+}

@@ -36,7 +36,12 @@ async function responses(records) {
       ...new Set(records.map((record) => String(record.resourceId))),
     ]),
     getUserSummaries([
-      ...new Set(records.map((record) => String(record.learnerId))),
+      ...new Set(
+        records.flatMap((record) => [
+          String(record.learnerId),
+          ...record.history.map((event) => String(event.actorId)),
+        ]),
+      ),
     ]),
   ]);
   return records.map((record) => ({
@@ -53,6 +58,7 @@ async function responses(records) {
       fromStatus: event.fromStatus,
       toStatus: event.toStatus,
       actorId: String(event.actorId),
+      actorName: learners.get(String(event.actorId))?.name ?? null,
       reason: event.reason,
       at: event.at,
     })),

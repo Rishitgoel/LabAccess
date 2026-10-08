@@ -1,6 +1,6 @@
 import { ChevronDown, SlidersHorizontal, RotateCcw } from "lucide-react";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,6 +22,7 @@ export function AppHeader({
   logoutBusy,
 }) {
   const profile = useRef(null);
+  const { pathname } = useLocation();
   return (
     <header className="app-header">
       <div className="app-header__inner">
@@ -39,17 +40,31 @@ export function AppHeader({
         ) : (
           <>
             <nav aria-label="Main navigation">
-              <a className="nav-link" href="/" aria-current="page">
+              <Link
+                className="nav-link"
+                to="/"
+                aria-current={pathname === "/" ? "page" : undefined}
+              >
                 Resources
-              </a>
-              {onViewRequests && (
-                <Button
+              </Link>
+              {user ? (
+                <Link
                   className="nav-link"
-                  variant="ghost"
-                  onClick={onViewRequests}
+                  to={role === "reviewer" ? "/review" : "/requests"}
+                  aria-current={pathname !== "/" ? "page" : undefined}
                 >
                   {role === "reviewer" ? "Review queue" : "My requests"}
-                </Button>
+                </Link>
+              ) : (
+                onViewRequests && (
+                  <Button
+                    className="nav-link"
+                    variant="ghost"
+                    onClick={onViewRequests}
+                  >
+                    {role === "reviewer" ? "Review queue" : "My requests"}
+                  </Button>
+                )
               )}
             </nav>
             <DropdownMenu>

@@ -297,25 +297,27 @@ October 8 evidence: [verification ledger](docs/verification.md#phase-3--workflow
 
 ### Tasks
 
-- [ ] Implement a shared fetch client with credentials, CSRF behavior, readable normalized errors, and no automatic mutation retries.
-- [ ] Add feature APIs/hooks for resources, requests, session, and decisions. Use one consistent server-state approach; avoid mixing multiple caches.
-- [ ] Build catalog status mapping by resource ID from the learner's requests. The catalog must not infer status solely from the current visible list page.
-- [ ] For the small seeded catalog, load statuses across all learner request pages or add a documented bounded summary query if genuinely needed.
-- [ ] Connect the request dialog; prevent repeated submit while saving and preserve reason on failure.
-- [ ] Build My requests, Request details, RequestTimeline, and Review queue using the shared shell and statuses.
-- [ ] Connect reviewer DecisionPanel with reason validation, confirmation, pending state, and revision-aware mutations.
-- [ ] Refresh affected catalog/list/detail views after success. Do not show success or approved badges before persistence.
-- [ ] On 409 show that the request changed, refresh state, and require a new deliberate decision.
-- [ ] On uncertain write failures read the saved request/state first; distinguish a failed write from a successful write whose response was lost.
-- [ ] Provide role-aware routes and a useful not-found page. No persistent login data in localStorage.
+- [x] Implement a shared fetch client with credentials, CSRF behavior, readable normalized errors, and no automatic mutation retries.
+- [x] Add feature APIs/hooks for resources, requests, session, and decisions. Use one consistent server-state approach; avoid mixing multiple caches.
+- [x] Build catalog status mapping by resource ID from the learner's requests. The catalog must not infer status solely from the current visible list page.
+- [x] For the small seeded catalog, load statuses across all learner request pages or add a documented bounded summary query if genuinely needed.
+- [x] Connect the request dialog; prevent repeated submit while saving and preserve reason on failure.
+- [x] Build My requests, Request details, RequestTimeline, and Review queue using the shared shell and statuses.
+- [x] Connect reviewer DecisionPanel with reason validation, confirmation, pending state, and revision-aware mutations.
+- [x] Refresh affected catalog/list/detail views after success. Do not show success or approved badges before persistence.
+- [x] On 409 show that the request changed, refresh state, and require a new deliberate decision.
+- [x] On uncertain write failures read the saved request/state first; distinguish a failed write from a successful write whose response was lost.
+- [x] Provide role-aware routes and a useful not-found page. No persistent login data in localStorage.
 
 ### Exit gate
 
-- [ ] Learner logs in, requests MongoDB Learning Cluster, sees pending after refresh.
-- [ ] Reviewer logs in, sees the request, approves with a reason.
-- [ ] Learner sees approved state and matching history after refresh.
-- [ ] Two accounts cannot view each other's learner details.
-- [ ] The same behavior works with direct-page navigation, not only navigation from the catalog.
+- [x] Learner logs in, requests MongoDB Learning Cluster, sees pending after refresh.
+- [x] Reviewer logs in, sees the request, approves with a reason.
+- [x] Learner sees approved state and matching history after refresh.
+- [x] Two accounts cannot view each other's learner details.
+- [x] The same behavior works with direct-page navigation, not only navigation from the catalog.
+
+October 8 evidence: [verification ledger](docs/verification.md#phase-4--browser-workflow-october-8-2026). The persisted browser journey, owner isolation, stale decisions, and uncertain-write recovery passed locally. Phase 5 learner actions and genuine Kiro evidence remain open.
 
 **Suggested commit:** `feat: connect learner requests and reviewer decisions end to end`.
 
@@ -520,8 +522,8 @@ Keep one short tracker, rather than duplicating status across documents:
 | 0 | In progress | Phase 0 foundation commit; docs/verification.md | Kiro account, identity clarification, one genuine task |
 | 1 | Verified complete | Phase 1 UI commit; docs/verification.md | Preserved at /preview |
 | 2 | Verified complete | Phase 2 auth/data commit; docs/verification.md | Auth retained and regression-tested |
-| 3 | Verified complete | Phase 3 workflow commit; docs/verification.md | Phase 4 browser integration |
-| 4 | Not started | — | Complete browser flow |
+| 3 | Verified complete | Phase 3 workflow commit; docs/verification.md | Backend retained and regression-tested |
+| 4 | Verified complete | Phase 4 browser workflow commit; docs/verification.md | Phase 5 learner actions and filters |
 | 5 | Not started | — | Remaining core behavior |
 | 6 | Not started | — | Responsive/motion finish |
 | 7 | Not started | — | Integrated validation |

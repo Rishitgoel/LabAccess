@@ -42,9 +42,11 @@ export async function api(path, { method = "GET", body } = {}) {
   try {
     result = await response.json();
   } catch {
-    throw new ApiError(response.status, {
+    const error = new ApiError(response.status, {
       message: "Unexpected server response. Try again.",
     });
+    error.uncertain = method !== "GET";
+    throw error;
   }
   if (!response.ok) {
     if (

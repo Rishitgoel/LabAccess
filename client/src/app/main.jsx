@@ -5,6 +5,9 @@ import { MotionConfig } from "motion/react";
 import { SessionProvider, useSession } from "@/features/auth/SessionProvider";
 import AuthPage from "@/features/auth/AuthPage";
 import CatalogPage from "@/features/resources/CatalogPage";
+import RequestListPage from "@/features/requests/RequestListPage";
+import RequestDetailPage from "@/features/requests/RequestDetailPage";
+import { RouteState } from "@/components/feedback/RouteState";
 const PreviewCatalog = React.lazy(() => import("./PreviewCatalog"));
 import { Button } from "@/components/ui/button";
 import "@fontsource/inter/400.css";
@@ -30,14 +33,7 @@ function Guard({ publicPage, role, children }) {
     );
   if (publicPage) return user ? <Navigate to="/" replace /> : children;
   if (!user) return <Navigate to="/login" replace />;
-  if (role && role !== user.role)
-    return (
-      <main className="session-state">
-        <h1>Access denied</h1>
-        <p>This page is available to reviewers.</p>
-        <a href="/">Return to resources</a>
-      </main>
-    );
+  if (role && role !== user.role) return <RouteState denied />;
   return children;
 }
 function App() {
@@ -46,6 +42,22 @@ function App() {
       <BrowserRouter>
         <SessionProvider>
           <Routes>
+            <Route
+              path="/requests"
+              element={
+                <Guard role="learner">
+                  <RequestListPage />
+                </Guard>
+              }
+            />
+            <Route
+              path="/requests/:id"
+              element={
+                <Guard>
+                  <RequestDetailPage />
+                </Guard>
+              }
+            />
             <Route
               path="/"
               element={
@@ -74,13 +86,7 @@ function App() {
               path="/review"
               element={
                 <Guard role="reviewer">
-                  <main className="session-state">
-                    <h1>Review queue</h1>
-                    <p>
-                      The request workflow will be connected in the next phases.
-                    </p>
-                    <a href="/">Return to resources</a>
-                  </main>
+                  <RequestListPage review />
                 </Guard>
               }
             />
@@ -98,15 +104,7 @@ function App() {
                 </React.Suspense>
               }
             />
-            <Route
-              path="*"
-              element={
-                <main className="session-state">
-                  <h1>Page not found</h1>
-                  <a href="/">Return to resources</a>
-                </main>
-              }
-            />
+            <Route path="*" element={<RouteState />} />
           </Routes>
         </SessionProvider>
       </BrowserRouter>

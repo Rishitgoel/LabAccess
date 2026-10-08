@@ -3,17 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "workspaces": ["client", "server"],
-  "engines": { "node": ">=24.14.1 <25", "npm": ">=11 <12" },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=24.14.1 <25",
+    "npm": ">=11 <12"
+  },
   "packageManager": "npm@11.11.0",
   "scripts": {
     "dev": "concurrently --kill-others --names api,client \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
-    "test": "npm run test --workspace server",
+    "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspace client",
     "start": "npm run start --workspace server",
     "seed": "npm run seed --workspace server",
     "mongo": "npm run mongo --workspace server"
   },
-  "devDependencies": { "concurrently": "^9.2.1" },
-  "overrides": { "shell-quote": "1.12.0" }
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "overrides": {
+    "shell-quote": "1.12.0"
+  }
 }

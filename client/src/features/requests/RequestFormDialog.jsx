@@ -16,16 +16,19 @@ export function RequestFormDialog({
   onClose,
   onSubmit,
   openingControl,
+  preview = false,
+  onCheckSaved,
 }) {
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
   const field = useRef(null);
   const busy = useRef(false);
   const count = [...reason.trim()].length;
   async function submit(event) {
     event.preventDefault();
-    if (busy.current) return;
+    if (busy.current || unconfirmed) return;
     if (count < 20 || count > 1000) {
       setError("Enter a reason of 20–1,000 characters.");
       field.current?.focus();
@@ -40,6 +43,26 @@ export function RequestFormDialog({
       onClose();
     } catch (failure) {
       setError(failure.message);
+      if (failure.unconfirmed) setUnconfirmed(true);
+    } finally {
+      busy.current = false;
+      setSaving(false);
+    }
+  }
+  async function checkSaved() {
+    if (busy.current) return;
+    busy.current = true;
+    setSaving(true);
+    try {
+      if (await onCheckSaved(resource, reason.trim())) onClose();
+      else {
+        setUnconfirmed(false);
+        setError("No request was saved. Review your reason and submit again.");
+      }
+    } catch {
+      setError(
+        "Saved state could not be checked. Check again before submitting.",
+      );
     } finally {
       busy.current = false;
       setSaving(false);
@@ -49,12 +72,12 @@ export function RequestFormDialog({
     <Dialog
       open
       onOpenChange={(open) => {
-        if (!open && !busy.current) onClose();
+        if (!open && !busy.current && !unconfirmed) onClose();
       }}
     >
       <DialogContent
         className="request-dialog"
-        showCloseButton={!saving}
+        showCloseButton={!saving && !unconfirmed}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           field.current?.focus();
@@ -64,10 +87,10 @@ export function RequestFormDialog({
           openingControl?.focus();
         }}
         onEscapeKeyDown={(event) => {
-          if (saving) event.preventDefault();
+          if (saving || unconfirmed) event.preventDefault();
         }}
         onPointerDownOutside={(event) => {
-          if (saving) event.preventDefault();
+          if (saving || unconfirmed) event.preventDefault();
         }}
       >
         <DialogHeader>
@@ -89,7 +112,7 @@ export function RequestFormDialog({
               setReason(event.target.value);
               setError("");
             }}
-            readOnly={saving}
+            readOnly={saving || unconfirmed}
             placeholder="Describe what you want to learn or build…"
             aria-invalid={!!error}
             aria-describedby={`reason-help${error ? " reason-error" : ""}`}
@@ -103,22 +126,34 @@ export function RequestFormDialog({
               {error}
             </p>
           )}
-          <p className="preview-note">
-            Preview only. This request is not saved to a server.
-          </p>
+          {preview && (
+            <p className="preview-note">
+              Preview only. This request is not saved to a server.
+            </p>
+          )}
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              disabled={saving}
+              disabled={saving || unconfirmed}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={saving}>
-              {saving ? "Adding preview…" : "Submit request"}
-              <ArrowRight aria-hidden="true" />
-            </Button>
+            {unconfirmed ? (
+              <Button type="button" onClick={checkSaved} disabled={saving}>
+                {saving ? "Checking saved state…" : "Check saved request"}
+              </Button>
+            ) : (
+              <Button type="submit" disabled={saving}>
+                {saving
+                  ? preview
+                    ? "Adding preview…"
+                    : "Saving request…"
+                  : "Submit request"}
+                <ArrowRight aria-hidden="true" />
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
