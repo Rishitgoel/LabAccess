@@ -1,0 +1,117 @@
+{
+  "reviewedCommit": "91f58d74f3cf802b9ce0bf9918d8ade5c59c7dd1",
+  "testedSourceCommit": "8d7cd1b5ee931d5d075f184d5af83b8f99ca18f7",
+  "testedSourceDiff": [],
+  "publicFilesWithoutAuthentication": [
+    {
+      "path": "README.md",
+      "status": 200
+    },
+    {
+      "path": "package.json",
+      "status": 200
+    },
+    {
+      "path": "package-lock.json",
+      "status": 200
+    },
+    {
+      "path": ".env.example",
+      "status": 200
+    },
+    {
+      "path": "client/src/app/main.jsx",
+      "status": 200
+    },
+    {
+      "path": "server/src/app.js",
+      "status": 200
+    },
+    {
+      "path": "docs/verification.md",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase7/approved-1440.png",
+      "status": 200
+    },
+    {
+      "path": "docs/architecture.md",
+      "status": 200
+    },
+    {
+      "path": "docs/api-contract.md",
+      "status": 200
+    },
+    {
+      "path": "docs/developer-walkthrough.md",
+      "status": 200
+    },
+    {
+      "path": "docs/ai-usage.md",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase8/clean-clone-approved.png",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase7/approved-375.png",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase7/stale-decision.png",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase7/uncertain-write.png",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase6/05-my-requests-1440.png",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase6/08-review-queue-1440.png",
+      "status": 200
+    },
+    {
+      "path": "docs/screenshots/phase6/02-login-1440.png",
+      "status": 200
+    },
+    {
+      "path": "IMPLEMENTATION_PLAN.md",
+      "status": 200
+    }
+  ],
+  "history": {
+    "reachableCommits": "12",
+    "uniqueTextBlobs": 217,
+    "credentialFindings": [],
+    "forbiddenTrackedPaths": [],
+    "scope": [
+      "private-key",
+      "provider-prefix",
+      "credential-uri"
+    ],
+    "limit": "Pattern scan only; synthetic fixture passwords/secrets intentionally public. Does not guarantee absence of every credential or prove source provenance."
+  },
+  "npmAudit": {
+    "vulnerabilities": 0,
+    "dependencies": 366
+  },
+  "hosting": "Not attempted: required selected-tool and human acceptance gates remain open",
+  "submission": {
+    "sent": false,
+    "time": null
+  },
+  "browser": {
+    "loggedOut": true,
+    "publicLabel": true,
+    "clientAndServerVisible": true,
+    "readmeImageLoaded": true,
+    "imageNaturalWidth": 1424,
+    "cloneUrl": "https://github.com/Rishitgoel/LabAccess.git",
+    "screenshot": "screenshots/phase9/public-repository.png"
+  }
+}

@@ -462,12 +462,14 @@ October 8 result: documentation and fresh-clone setup verified; full Phase 8 acc
 
 ### Required submission preparation
 
-- [ ] Create/publish the repository publicly as a deliberate user submission action.
-- [ ] Review repository while logged out: files, README, images, links, clone instructions.
-- [ ] Confirm the submitted branch contains the tested final commit and both frontend/backend.
-- [ ] Check history, not only current files, for credentials/private content before publishing.
-- [ ] Ensure no placeholder badges, broken demo links, or exaggerated verification claims.
+- [x] Create/publish the repository publicly as a deliberate user submission action.
+- [x] Review repository while logged out: files, README, images, links, clone instructions.
+- [x] Confirm the submitted branch contains the tested final commit and both frontend/backend.
+- [x] Check history, not only current files, for credentials/private content before publishing.
+- [x] Ensure no placeholder badges, broken demo links, or exaggerated verification claims.
 - [ ] Share the public repository URL in the original email thread when ready to submit; record actual submission time.
+
+October 8: repository review/preparation verified; [local submission draft](docs/submission-preparation.md) and [evidence](docs/phase9-checks.json). Hosting not attempted while required Kiro/human gates remain open. Main contains the tested source; recheck it after Kiro changes. No email sent, so Phase 9 exit gate remains open.
 
 **Exit gate:** public access confirmed and the repository link actually submitted. A prepared draft alone is not submission.
 
@@ -536,7 +538,7 @@ Keep one short tracker, rather than duplicating status across documents:
 | 6 | Implemented but unverified in full | 43081be; responsive/a11y/reduced-motion evidence | Full-motion subjective walkthrough remains open |
 | 7 | Verified complete locally | docs/verification.md and phase7 checks/screenshots | Phase 8 documentation/fresh clone |
 | 8 | In progress | README, phase8-checks.json, clean-clone screenshot; 8d7cd1b setup repair | Genuine Code0/Kiro tasks and human explanation |
-| 9 | Not started | — | Public review/submission |
+| 9 | In progress | Public logged-out review, phase9-checks.json, submission-preparation.md | Finish Kiro/human gates; review final commit and deliberately submit |
 | 10 | Reserved | — | Critical recovery only |
 
 States: Not started, In progress, Implemented but unverified, Verified complete, or Blocked with a concrete reason.

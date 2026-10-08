@@ -267,3 +267,22 @@ Documentation and local reproducibility are verified. Full Phase 8 acceptance re
 Evidence: [phase8-checks.json](phase8-checks.json), [clean-clone approved](screenshots/phase8/clean-clone-approved.png), [developer walkthrough](developer-walkthrough.md), [AI usage](ai-usage.md). Setup repair: [8d7cd1b](https://github.com/Rishitgoel/LabAccess/commit/8d7cd1b). Final tested source/command README came from this pushed repair; subsequent closeout changes only record evidence/status and screenshot links.
 
 Public hosting, live Atlas, normal-motion visual acceptance, employer confirmation of the assessment's Kiro domain mismatch, genuine selected-tool use, human independence and email submission remain separate open items. No email was sent and no account terms were accepted.
+
+## Phase 9 — public repository review and submission preparation, October 8, 2026
+
+Repository review and a local reply draft are prepared. **Phase 9 is not complete: no repository link has been emailed in the original assessment thread.** The user plans to do Kiro tasks last; required selected-tool evidence and human explanation remain open. Optional hosting was not attempted while required gates remain incomplete. No production credentials, provider accounts or public deployment were created.
+
+| Check | Result | Evidence / limit |
+|---|---|---|
+| Public repository | Confirmed logged out | Browser shows Public plus Sign in/Sign up; main branch, client/server folders and README visible |
+| README/image/clone | Passed live | Actual approved screenshot loads at natural width 1424; documented feature/setup/AI limitation text renders; Code menu gives HTTPS clone URL |
+| Anonymous files/links | Passed, 20 checks | Exact committed README, manifests/lockfile/env example, client/server entry files and all README local documentation/screenshot targets returned 200 without authentication. README content matches after Windows newline normalization |
+| Tested source on main | Confirmed | Reviewed 91f58d7; diff against Phase 8's tested 8d7cd1b for client/server/manifests/env example is empty. 57 tests/build and clean-clone browser evidence remain applicable. This phase changes documentation/evidence only |
+| History credential scan | Passed within scope | Twelve reachable commits, 217 unique text blobs: no PEM private key/common provider-prefix/password-bearing MongoDB URI matches. No tracked .env/.local/node_modules/dist/key files. Synthetic fixtures are intentional. Pattern scan does not establish every possible secret absence or source provenance |
+| Dependency audit | Refreshed, zero | npm audit JSON: zero vulnerabilities across 366 dependencies |
+| Claims and links | Reviewed | No placeholder badges or purported hosted demo links. README distinguishes concepts from actual captures, Codex from required tool, local from hosted success, and reduced-motion from full-motion acceptance |
+| Draft | Prepared locally | submission-preparation.md contains a reviewable reply and remaining gates; original thread retained, no invented recipient |
+| Hosting | Not attempted | Optional; selected-tool and human acceptance gates open. No public HTTPS/workflow acceptance claimed |
+| Actual submission | **Not submitted** | No send action; actual submission time null. Final tested commit/public review must be refreshed after later Kiro changes |
+
+Evidence: [phase9-checks.json](phase9-checks.json), [logged-out repository screenshot](screenshots/phase9/public-repository.png), [submission preparation](submission-preparation.md). Existing development services and data were preserved.
