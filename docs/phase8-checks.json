@@ -1,0 +1,80 @@
+{
+  "cloneCommit": "8d7cd1b",
+  "node": "v24.14.1",
+  "npm": "11.11.0",
+  "database": "labaccess_test_phase8_clean_20261008",
+  "noHiddenFilesCopied": true,
+  "install": "npm ci passed: 318 packages, zero vulnerabilities",
+  "tests": {
+    "client": 16,
+    "server": 41,
+    "failed": 0
+  },
+  "build": {
+    "passed": true,
+    "mainKb": 556.35,
+    "gzipKb": 179.15,
+    "advisory": "Main chunk >500 kB"
+  },
+  "audit": {
+    "vulnerabilities": 0,
+    "dependencies": 366
+  },
+  "seed": {
+    "users": 3,
+    "resources": 6,
+    "secondRunPreservedAllRecords": true
+  },
+  "browserDev": {
+    "walkthrough": "Two learners and one reviewer; full six-event lifecycle, role/owner isolation and reload",
+    "requestId": "6ac7d948c3ffcf871ea62912",
+    "revision": 5,
+    "actions": [
+      "submit",
+      "cancel",
+      "resubmit",
+      "reject",
+      "resubmit",
+      "approve"
+    ]
+  },
+  "builtServerDefaultPort": {
+    "port": 3001,
+    "health": 200,
+    "root": 200,
+    "asset": 200,
+    "deepLink": 200,
+    "authenticatedDetail": 200,
+    "historyEvents": 6
+  },
+  "limits": [
+    "MongoDB binary and npm download caches reused normally; no .env/.local/node_modules copied",
+    "In-app browser blocked direct port 3001 navigation with ERR_BLOCKED_BY_CLIENT; HTTP/API checks pass",
+    "Development Motion warning reflects native reduced-motion preference; normal-motion acceptance remains open"
+  ],
+  "builtBrowserAlternatePort": {
+    "port": 3002,
+    "signIn": true,
+    "directUrlReload": true,
+    "approvedRevision": 5,
+    "historyEvents": 6,
+    "screenshot": "screenshots/phase8/clean-clone-approved.png"
+  },
+  "cleanTrackedCheckout": true,
+  "initialCloneCommit": "a7e6163",
+  "repairCommit": "8d7cd1b",
+  "repair": "SPA sendFile now resolves index.html relative to the explicit build root; hidden-checkout regression failed before and passed after",
+  "documentationRequirements": {
+    "categories": 8,
+    "contentCategoriesComplete": 5,
+    "namedToolIdentification": "No verified Code0/Kiro use; explicitly pending",
+    "namedToolTasks": 0,
+    "developerIndependentExplanation": "Not yet demonstrated",
+    "pendingCategories": [
+      "Whether Code0/Kiro was used",
+      "AI Development Experience with the selected tool",
+      "3–5 specific selected-tool tasks"
+    ]
+  },
+  "normalDevelopmentRestored": true
+}

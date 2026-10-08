@@ -2,7 +2,7 @@
 
 **Version:** 1.1  
 **Planning date:** October 8, 2026  
-**Status:** Phases 1–5 and Phase 7 verified locally; Phase 6 implementation and reduced-motion checks verified. Full-motion visual acceptance, genuine Kiro evidence, fresh clone, and hosting/submission remain open.
+**Status:** Phases 1–5 and Phase 7 verified locally; Phase 6 implementation and reduced-motion checks verified. Full-motion visual acceptance, genuine Kiro evidence, human explanation, and hosting/submission remain open.
 **Requirements:** [PRD.md](PRD.md)  
 **Visual specification:** [DESIGN.md](DESIGN.md)  
 **Selected reference:** [sample-ui.png](sample-ui.png)  
@@ -411,7 +411,7 @@ October 8 evidence: [verification ledger](docs/verification.md#phase-6--responsi
 | Learner/reviewer browser flow | Passed locally | Two learners, reviewer; six events, 22-row pagination, stale/fault recovery | — |
 | Mobile/keyboard/reduced motion | Passed within scope | Final 1440/375 captures, keyboard confirmations; Phase 6 matrix retained | Full-motion walkthrough open |
 | Production build/run | Passed locally | Build; actual production HTTPS proxy/API and assets/deep links | Hosted browser flow open |
-| Fresh clone | Deferred to Phase 8 | Literal README clean checkout acceptance | Open |
+| Fresh clone | Passed in Phase 8 | Fresh GitHub clone, install/seed/test/build/run and deep-link repair | Named-tool/human gates separate |
 | Hosted workflow, if provided | Not attempted | — | Optional |
 
 Evidence and limitations: [docs/verification.md](docs/verification.md#phase-7--final-integration-and-release-correctness-october-8-2026). Phase 7 exit gate passes locally; earlier full-motion/Kiro and later fresh-clone/hosting gates remain open.
@@ -426,25 +426,27 @@ Do not translate local success into hosted success. Re-run only checks affected 
 
 ### Tasks
 
-- [ ] Complete README project description, features, actual technologies, and current screenshots.
-- [ ] List exact supported prerequisites and commands as implemented, not placeholder scripts.
-- [ ] Document .env values, session/CSRF behavior, local MongoDB or Atlas setup, seed, and demo accounts.
-- [ ] Include install, development, test, seed, build, and production-run instructions.
-- [ ] Explain role restrictions, duplicate prevention, embedded history, revision checks, and approval's limited meaning.
+- [x] Complete README project description, features, actual technologies, and current screenshots.
+- [x] List exact supported prerequisites and commands as implemented, not placeholder scripts.
+- [x] Document .env values, session/CSRF behavior, local MongoDB or Atlas setup, seed, and demo accounts.
+- [x] Include install, development, test, seed, build, and production-run instructions.
+- [x] Explain role restrictions, duplicate prevention, embedded history, revision checks, and approval's limited meaning.
 - [ ] Identify Code0 or Kiro explicitly. Describe 3–5 real tasks and link evidence/commits.
-- [ ] Document genuine AI mistakes and fixes if encountered. Do not fabricate one to satisfy the assessment.
-- [ ] List known omissions and limitations; distinguish optional hosted demo from required local reproducibility.
-- [ ] Commit current screenshots, never static concept images presented as working app screenshots.
-- [ ] Keep docs/ui-references labelled as design references; store actual application screenshots separately in docs/screenshots.
-- [ ] From a separate clean checkout, follow the README literally: install, configure, seed, test, build, and run.
-- [ ] Correct any undocumented command/environment dependency and repeat only the affected checks.
+- [x] Document genuine AI mistakes and fixes if encountered. Do not fabricate one to satisfy the assessment.
+- [x] List known omissions and limitations; distinguish optional hosted demo from required local reproducibility.
+- [x] Commit current screenshots, never static concept images presented as working app screenshots.
+- [x] Keep docs/ui-references labelled as design references; store actual application screenshots separately in docs/screenshots.
+- [x] From a separate clean checkout, follow the README literally: install, configure, seed, test, build, and run.
+- [x] Correct any undocumented command/environment dependency and repeat only the affected checks.
 
 ### Exit gate
 
-- [ ] Fresh clone works without copying hidden local files.
+- [x] Fresh clone works without copying hidden local files.
 - [ ] README covers all eight requested categories from the email.
-- [ ] AI evidence is truthful and specific.
+- [x] AI evidence is truthful and specific.
 - [ ] Developer can explain sessions, ownership, transitions, indexes, revisions, and UI data flow independently.
+
+October 8 result: documentation and fresh-clone setup verified; full Phase 8 acceptance remains open for 3–5 genuine named-tool tasks and the human explanation walkthrough. Five of eight email content categories are complete; the three AI-use categories honestly report the missing evidence. See [verification](docs/verification.md#phase-8--documentation-and-fresh-clone-october-8-2026) and [developer walkthrough](docs/developer-walkthrough.md).
 
 **Suggested commit:** `docs: finalize setup AI evidence and reproducibility`.
 
@@ -533,7 +535,7 @@ Keep one short tracker, rather than duplicating status across documents:
 | 5 | Verified complete | Phase 5 core workflow commit; docs/verification.md | Core workflow retained and regression-tested |
 | 6 | Implemented but unverified in full | 43081be; responsive/a11y/reduced-motion evidence | Full-motion subjective walkthrough remains open |
 | 7 | Verified complete locally | docs/verification.md and phase7 checks/screenshots | Phase 8 documentation/fresh clone |
-| 8 | Not started | — | Documentation/fresh clone |
+| 8 | In progress | README, phase8-checks.json, clean-clone screenshot; 8d7cd1b setup repair | Genuine Code0/Kiro tasks and human explanation |
 | 9 | Not started | — | Public review/submission |
 | 10 | Reserved | — | Critical recovery only |
 

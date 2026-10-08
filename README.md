@@ -2,7 +2,7 @@
 
 LabAccess is a MERN application for requesting and reviewing access to learning resources. Learners explain what they need, reviewers record decisions, and both can inspect the saved history. **Approval records a decision inside LabAccess; it does not provision external access.**
 
-The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 clean-checkout validation is in progress; the suite includes a new hidden-checkout SPA regression. Public hosting, full-motion visual acceptance, genuine Code0/Kiro task evidence, and developer explanation acceptance remain open. See [verification](docs/verification.md) for the scope of each result.
+The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 setup is verified from a fresh GitHub clone; all 57 tests pass, including a hidden-checkout SPA regression. Public hosting, full-motion visual acceptance, genuine Code0/Kiro task evidence, and developer explanation acceptance remain open. See [verification](docs/verification.md) for the scope of each result.
 
 ![Approved learner request with six saved events](docs/screenshots/phase7/approved-1440.png)
 
@@ -160,6 +160,8 @@ Details: [architecture](docs/architecture.md), [API contract](docs/api-contract.
 Five real **Codex** task examples, accepted/corrected suggestions, actual issues, verification and commit links are recorded in [AI usage evidence](docs/ai-usage.md). They are explicitly separate from the pending Code0/Kiro evidence. Installation, an account, a prepared prompt or tests suggested by Codex must not be presented as a completed Kiro task.
 
 ## Screenshots and known limitations
+
+Fresh-clone built-client evidence: [approved request and six events](docs/screenshots/phase8/clean-clone-approved.png).
 
 Actual synthetic-data application captures: [approved desktop](docs/screenshots/phase7/approved-1440.png), [approved mobile](docs/screenshots/phase7/approved-375.png), [stale decision](docs/screenshots/phase7/stale-decision.png), [uncertain save](docs/screenshots/phase7/uncertain-write.png), [learner list](docs/screenshots/phase6/05-my-requests-1440.png), [review queue](docs/screenshots/phase6/08-review-queue-1440.png), and [login](docs/screenshots/phase6/02-login-1440.png).
 
