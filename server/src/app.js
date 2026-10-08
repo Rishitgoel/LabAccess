@@ -72,7 +72,7 @@ export function createApp({
       );
     app.use(express.static(clientDist));
     app.get("/{*path}", (_req, res) =>
-      res.sendFile(`${clientDist}/index.html`),
+      res.sendFile("index.html", { root: clientDist }),
     );
   }
   app.use((_req, res) =>

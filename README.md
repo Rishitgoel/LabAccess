@@ -2,7 +2,7 @@
 
 LabAccess is a MERN application for requesting and reviewing access to learning resources. Learners explain what they need, reviewers record decisions, and both can inspect the saved history. **Approval records a decision inside LabAccess; it does not provision external access.**
 
-The functional workflow and Phase 7 correctness checks are verified locally. The final suite has 56 passing tests. Public hosting, full-motion visual acceptance, genuine Code0/Kiro task evidence, and developer explanation acceptance remain open. See [verification](docs/verification.md) for the scope of each result.
+The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 clean-checkout validation is in progress; the suite includes a new hidden-checkout SPA regression. Public hosting, full-motion visual acceptance, genuine Code0/Kiro task evidence, and developer explanation acceptance remain open. See [verification](docs/verification.md) for the scope of each result.
 
 ![Approved learner request with six saved events](docs/screenshots/phase7/approved-1440.png)
 
@@ -105,7 +105,7 @@ npm run build
 npm audit
 ```
 
-Tests use separate disposable real MongoDB instances, not the configured development database. They cover sessions/CSRF, role/ownership isolation, unique indexes, validation, transitions/history, concurrent writes, filters/paging and write recovery. The first test run may download mongod. There are 16 client and 40 backend checks; a real server child process also verifies startup and persistence. The current build succeeds with a non-failing >500 kB main-chunk advisory.
+Tests use separate disposable real MongoDB instances, not the configured development database. They cover sessions/CSRF, role/ownership isolation, unique indexes, validation, transitions/history, concurrent writes, filters/paging and write recovery. The first test run may download mongod. There are 16 client and 41 backend checks, including a hidden-checkout built-SPA regression; a real server child process also verifies startup and persistence. The current build succeeds with a non-failing >500 kB main-chunk advisory.
 
 For a **local built-client check**, stop `npm run dev`, edit `.env` to `APP_ORIGIN=http://127.0.0.1:3001` while leaving `NODE_ENV=development`, then run:
 
@@ -114,6 +114,8 @@ npm start
 ```
 
 Open [http://127.0.0.1:3001](http://127.0.0.1:3001). Express serves `client/dist` and the API from one origin; detail-page reloads work through its SPA fallback. Stop with Ctrl+C. Restore `APP_ORIGIN=http://127.0.0.1:5173` before returning to `npm run dev`. These HTTP checks do not claim production HTTPS acceptance.
+
+For an alternate built-client port, set `PORT=3002` and `APP_ORIGIN=http://127.0.0.1:3002`, then use `npm start` and that URL. Restore `PORT=3001` as well as the Vite origin before `npm run dev`. The Codex in-app browser blocked port 3001 navigation in the Phase 8 environment; default-port HTTP/API checks and the alternate-port browser check are recorded separately.
 
 ### Production configuration
 
