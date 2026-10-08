@@ -2,7 +2,11 @@
 
 A MERN learning-resource request and review application. Learners will request resources, reviewers will decide, and both will see persisted history. Approval records a decision; it does not provision external access.
 
-**Current state: Phase 0 foundations.** React/Vite, Express, controlled MongoDB connectivity, build/run scripts, and contracts are present. Authentication, resources, workflow, and real seeding are scheduled for later phases. The initial screen checks readiness only.
+**Current state: Phase 1 design foundation.** The warm resource catalog, six sample resources, status badges, accessible request dialog, and feedback previews are implemented. Requests stay in memory and reset on refresh. Authentication, database-backed resources/workflow, and real seeding are scheduled for later phases. Express readiness remains available at `/api/health`.
+
+Use the demo profile menu → **Preview options** to inspect loading, empty, error, and reviewer variants or simulate a failed submission. My requests and View request show read-only fixture summaries, not completed persisted request pages. Search/category controls are omitted until implemented.
+
+![Phase 1 catalog](docs/screenshots/phase1-catalog-desktop.png)
 
 ## Prerequisites and install
 
@@ -50,11 +54,11 @@ Open `http://127.0.0.1:3001`; direct SPA paths return the built client, while `/
 | APP_ORIGIN | planned CSRF allowed browser origin; use actual origin including port |
 | SEED_DEMO_PASSWORD | reserved for Phase 2 synthetic accounts |
 
-The API can start without a database, but `/api/health` returns **503** and the screen explains the failure. Configure/start MongoDB and restart after an initial failure. Database-backed feature acceptance is still pending.
+The API can start without a database, but `/api/health` returns **503** with a controlled failure message. The Phase 1 catalog uses fixtures independently of database readiness. Configure/start MongoDB and restart after an initial failure. Database-backed feature acceptance is still pending.
 
 ## Technologies and decisions
 
-React 19, Vite 8, Node 24, Express 5, Mongoose 9, npm workspaces, and Node's built-in test runner. Warm white/beige design, horizontal navigation, feature ownership, server sessions, embedded request history, and conditional revisions are specified in the [architecture](docs/architecture.md) and [API contract](docs/api-contract.md). Sessions and workflow are contracts, not implemented claims.
+React 19, Vite 8, Tailwind 4, customized shadcn/Radix primitives, Motion, Lucide, locally bundled Inter/DM Serif Display fonts, Node 24, Express 5, Mongoose 9, npm workspaces, and Node's built-in test runner. Warm white/beige design, horizontal navigation, feature ownership, server sessions, embedded request history, and conditional revisions are specified in the [architecture](docs/architecture.md) and [API contract](docs/api-contract.md). Sessions and workflow are contracts, not implemented claims.
 
 ## AI development experience and evidence
 

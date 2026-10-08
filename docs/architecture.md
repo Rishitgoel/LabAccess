@@ -22,4 +22,6 @@ The app factory is independent of listening/database startup for testing. Databa
 
 ## Design continuity
 
-Preserve warm white/beige/charcoal/olive and horizontal navigation. [DESIGN.md](../DESIGN.md) and [page mapping](UI_REFERENCE_GUIDE.md) stay available to the chosen AI tool. The Phase 0 screen is a setup diagnostic, not a finished catalog or screenshot acceptance claim. Phase 1 builds the shared design primitives, resource catalog, and fixture dialog.
+Preserve warm white/beige/charcoal/olive and horizontal navigation. [DESIGN.md](../DESIGN.md) and [page mapping](UI_REFERENCE_GUIDE.md) stay available to the chosen AI tool. Phase 1 replaces the setup screen with the fixture catalog and request dialog; API readiness remains `/api/health`. Local React state coordinates fixtures. ResourceCard receives data/callbacks only, with no fetching/storage access. The preview role toggle is a design-review control, never authentication or authorization. Read-only summaries and preview controls are isolated in app/PreviewDialog.jsx for replacement in later phases.
+
+Shared shadcn primitives were generated with CLI 4.21.4 (new-york style, Radix). Tailwind 4 uses semantic CSS variables. Local cn utilities re-export the current shadcn cn package; no duplicate class-merging stack. Hero artwork is copied unchanged into client/public/assets; all text/actions are React elements. Fonts are bundled locally. Motion handles card entrance; CSS handles hover, with reduced-motion support verified on the current device. Whole-app acceptance remains in Phase 6.

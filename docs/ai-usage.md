@@ -42,3 +42,9 @@ Observed issue and reproduction, if any:
 Verification and outcome:
 Commit:
 ```
+
+## Phase 1 actual assistance — Codex
+
+Task/date: October 8, 2026, resource catalog and shared UI. Tool: Codex, plus official shadcn CLI 4.21.4 for component source generation (not named assessment-tool evidence). Accepted: warm tokens, locally bundled fonts/artwork, pure resource cards, four fixture statuses, Radix focus management, trimmed code-point reason validation, and temporary submission feedback. Corrected after browser review: intrinsic artwork sizing made the hero too tall; switched to a bounded decorative image. Added explicit focus restoration for dialogs opened from the profile menu and retained textarea focus while saving. Cleared stale validation errors when editing. Replaced the redundant clsx/tailwind-merge helper with the generated components' current cn helper.
+
+Verified: keyboard opening/Escape/focus trap, 375px dialog, failed submission retains input, deliberate retry, fixture-only confirmation, loading/empty/error previews, reviewer read-only controls, three/two/one-column screenshots, device reduced motion, final production runtime, build and existing foundation tests. Investigated transient hook errors while Vite re-optimized dependencies: dependency tree has one React version, reloaded development page recovered, and a fresh production browser had zero errors through failure/retry. See the Phase 1 ledger. Named Code0/Kiro usage is still zero verified tasks; do not count Codex work toward that requirement.

@@ -191,26 +191,26 @@ October 8 evidence: [verification ledger](docs/verification.md). Foundations pas
 
 ### Tasks
 
-- [ ] Define semantic color tokens from DESIGN.md: background, surface, border, text, muted text, olive, and status colors.
-- [ ] Configure heading/body typography, spacing, radii, focus styles, and a centered content container.
-- [ ] Customize shadcn Button, Card, Badge, Input, Textarea, Dialog, and Skeleton only as needed.
-- [ ] Build AppHeader with learner/reviewer navigation variants and a compact profile menu.
-- [ ] Build CatalogHero, ResourceCard, ResourceGrid, StatusBadge, EmptyState, and ErrorState.
-- [ ] Render the six sample resources through one fixture module. Include pending, approved, rejected, and cancelled examples.
-- [ ] Keep ResourceCard pure: receive resource, status, and action callbacks; no HTTP calls inside it.
-- [ ] Implement a labelled request dialog with a controlled reason field and a clearly temporary fixture callback.
-- [ ] Match the sample at desktop/tablet/mobile widths. Use three/two/one columns.
-- [ ] Use [assets/labaccess-hero.png](assets/labaccess-hero.png) for CatalogHero; follow [asset usage notes](assets/README.md) when placing it in the React runtime. Keep text/buttons as real components and never use the screenshot as the UI background.
-- [ ] Omit search/category controls until they work; they are optional under the PRD.
+- [x] Define semantic color tokens from DESIGN.md: background, surface, border, text, muted text, olive, and status colors.
+- [x] Configure heading/body typography, spacing, radii, focus styles, and a centered content container.
+- [x] Customize shadcn Button, Card, Badge, Input, Textarea, Dialog, and Skeleton only as needed.
+- [x] Build AppHeader with learner/reviewer navigation variants and a compact profile menu.
+- [x] Build CatalogHero, ResourceCard, ResourceGrid, StatusBadge, EmptyState, and ErrorState.
+- [x] Render the six sample resources through one fixture module. Include pending, approved, rejected, and cancelled examples.
+- [x] Keep ResourceCard pure: receive resource, status, and action callbacks; no HTTP calls inside it.
+- [x] Implement a labelled request dialog with a controlled reason field and a clearly temporary fixture callback.
+- [x] Match the sample at desktop/tablet/mobile widths. Use three/two/one columns.
+- [x] Use [assets/labaccess-hero.png](assets/labaccess-hero.png) for CatalogHero; follow [asset usage notes](assets/README.md) when placing it in the React runtime. Keep text/buttons as real components and never use the screenshot as the UI background.
+- [x] Omit search/category controls until they work; they are optional under the PRD.
 
 ### Exit gate
 
-- [ ] The catalog clearly matches the warm modern reference.
-- [ ] Cards and dialogs work by keyboard; focus returns to the opening control.
-- [ ] No horizontal overflow at 375px width.
-- [ ] Loading, empty, and error states can be previewed.
-- [ ] Fixture-mode submission is not represented as persisted functionality.
-- [ ] Compare the catalog/dialog against their images and record desktop/mobile differences.
+- [x] The catalog clearly matches the warm modern reference.
+- [x] Cards and dialogs work by keyboard; focus returns to the opening control.
+- [x] No horizontal overflow at 375px width.
+- [x] Loading, empty, and error states can be previewed.
+- [x] Fixture-mode submission is not represented as persisted functionality.
+- [x] Compare the catalog/dialog against their images and record desktop/mobile differences.
 
 **Suggested commit:** `feat: build warm resource catalog and shared UI`.
 
@@ -514,7 +514,7 @@ Keep one short tracker, rather than duplicating status across documents:
 | Phase | State | Commit/evidence | Next action |
 |---|---|---|---|
 | 0 | In progress | Phase 0 foundation commit; docs/verification.md | Kiro account, identity clarification, one genuine task |
-| 1 | Not started | — | Shared tokens/catalog |
+| 1 | Verified complete | Phase 1 UI commit; docs/verification.md | Phase 2 database/authentication |
 | 2 | Not started | — | Database/authentication |
 | 3 | Not started | — | Request rules/critical tests |
 | 4 | Not started | — | Complete browser flow |
