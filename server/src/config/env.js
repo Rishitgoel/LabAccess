@@ -38,6 +38,25 @@ export function readConfig(env = process.env) {
   } catch {
     throw new Error("APP_ORIGIN must be an origin URL (HTTPS in production).");
   }
+  // Production safeguard: reject URIs that omit an explicit database name.
+  // A URI like mongodb+srv://host/?appName=X has pathname "/" → slice(1) = "",
+  // which silently uses the MongoDB default database instead of the intended one.
+  const rawUri = env.MONGODB_URI;
+  if (rawUri && nodeEnv === "production") {
+    let dbName;
+    try {
+      dbName = new URL(rawUri).pathname.slice(1);
+    } catch {
+      throw new Error("MONGODB_URI is not a valid connection string.");
+    }
+    if (!dbName) {
+      throw new Error(
+        "MONGODB_URI must include an explicit database name " +
+          "(e.g. /mydb before any query string). " +
+          "A URI ending with '/' or '?' connects to the default database.",
+      );
+    }
+  }
   return {
     nodeEnv,
     // Render's public ingress terminates TLS; trust only the nearest proxy hop.
