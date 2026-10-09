@@ -11,9 +11,15 @@ export function readConfig(env = process.env) {
   if (!["development", "test", "production"].includes(nodeEnv)) {
     throw new Error("NODE_ENV must be development, test, or production.");
   }
-  if (![undefined, "", "false", "loopback"].includes(env.TRUST_PROXY)) {
-    throw new Error("TRUST_PROXY must be false or loopback.");
+  if (![undefined, "", "false", "loopback", "render"].includes(env.TRUST_PROXY)) {
+    throw new Error("TRUST_PROXY must be false, loopback, or render.");
   }
+  if (env.TRUST_PROXY === "render" && env.RENDER !== "true")
+    throw new Error("TRUST_PROXY=render requires Render's RENDER=true environment.");
+  const host =
+    env.HOST ?? (env.RENDER === "true" ? "0.0.0.0" : "127.0.0.1");
+  if (!["127.0.0.1", "0.0.0.0"].includes(host))
+    throw new Error("HOST must be 127.0.0.1 or 0.0.0.0.");
   let appOrigin;
   try {
     const url = new URL(env.APP_ORIGIN ?? "http://127.0.0.1:5173");
@@ -34,7 +40,15 @@ export function readConfig(env = process.env) {
   }
   return {
     nodeEnv,
-    trustProxy: env.TRUST_PROXY === "loopback" ? "loopback" : false,
+    // Render's public ingress terminates TLS; trust only the nearest proxy hop.
+    // Do not expose this listener through a bypass or an untrusted private service.
+    trustProxy:
+      env.TRUST_PROXY === "render"
+        ? 1
+        : env.TRUST_PROXY === "loopback"
+          ? "loopback"
+          : false,
+    host,
     port: integer(env.PORT, 3001, 1, 65535, "PORT"),
     mongodbUri: env.MONGODB_URI,
     appOrigin,

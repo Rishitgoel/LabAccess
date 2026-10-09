@@ -100,12 +100,43 @@ test("configuration rejects invalid port and connection timeout", () => {
   );
 });
 
-test("proxy trust defaults off and only permits the explicit loopback topology", () => {
+test("proxy trust defaults off and only permits explicit supported topologies", () => {
   assert.equal(readConfig({}).trustProxy, false);
   assert.equal(readConfig({ TRUST_PROXY: "false" }).trustProxy, false);
   assert.equal(readConfig({ TRUST_PROXY: "loopback" }).trustProxy, "loopback");
   for (const value of ["true", "1", "uniquelocal", "0.0.0.0/0"])
     assert.throws(() => readConfig({ TRUST_PROXY: value }), /TRUST_PROXY/);
+});
+
+test("Render binds publicly and trusts only its nearest ingress proxy when opted in", () => {
+  assert.equal(readConfig({}).host, "127.0.0.1");
+  const config = readConfig({
+    RENDER: "true", TRUST_PROXY: "render", PORT: "10000",
+  });
+  assert.equal(config.host, "0.0.0.0");
+  assert.equal(config.port, 10000);
+  assert.equal(config.trustProxy, 1);
+  const app = createApp({ config, isDatabaseReady: () => false });
+  assert.equal(app.get("trust proxy fn")("10.0.0.1", 0), true);
+  assert.equal(app.get("trust proxy fn")("203.0.113.9", 1), false);
+  assert.equal(readConfig({ RENDER: "true" }).trustProxy, false);
+  assert.throws(() => readConfig({ TRUST_PROXY: "render" }), /RENDER=true/);
+  assert.throws(() => readConfig({ HOST: "untrusted.example" }), /HOST/);
+});
+
+test("startup names invalid configuration without logging secret values", () => {
+  for (const overrides of [
+    { APP_ORIGIN: "http://invalid.test", SESSION_SECRET: "synthetic-private-value" },
+    { APP_ORIGIN: "https://labaccess.test", SESSION_SECRET: "synthetic-private-value" },
+  ]) {
+    const result = spawnSync(process.execPath, ["src/server.js"], {
+      encoding: "utf8",
+      env: { ...process.env, NODE_ENV: "production", TRUST_PROXY: "false", ...overrides },
+    });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Configuration error: (APP_ORIGIN|SESSION_SECRET)/);
+    assert.doesNotMatch(result.stderr, /synthetic-private-value|http:\/\/invalid.test/);
+  }
 });
 
 test("missing and unreachable MongoDB produce clear errors without exposing URI", async () => {

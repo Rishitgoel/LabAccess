@@ -119,9 +119,29 @@ For an alternate built-client port, set `PORT=3002` and `APP_ORIGIN=http://127.0
 
 ### Production configuration
 
-Build the client, set `NODE_ENV=production`, configure a strong independent `SESSION_SECRET`, MongoDB, and the exact external HTTPS `APP_ORIGIN`, then run `npm start` behind a same-host TLS reverse proxy. Secure cookies require HTTPS. The server remains loopback-only; it is not a public listener or TLS terminator.
+Build the client, set `NODE_ENV=production`, configure a strong independent `SESSION_SECRET`, MongoDB, and the exact external HTTPS `APP_ORIGIN`, then run `npm start` behind a TLS reverse proxy. Secure cookies require HTTPS. The server defaults to loopback locally and `0.0.0.0` on Render; it does not terminate TLS.
 
-Set `TRUST_PROXY=loopback` **only** when that proxy overwrites `X-Forwarded-For`, `X-Forwarded-Host` and `X-Forwarded-Proto`; keep the backend isolated from public access. Trust defaults off and broader settings are rejected. Seed refuses production: configure reviewers/resources in a controlled development/test setup rather than advertising a production seed. Production deployment, certificate management and hosted browser acceptance remain operator work, not a one-command hosting claim. The local TLS proxy/API topology was verified with a test CA explicitly trusted only by the verification client.
+Set `TRUST_PROXY=loopback` **only** when that proxy overwrites `X-Forwarded-For`, `X-Forwarded-Host` and `X-Forwarded-Proto`; keep the backend isolated from public access. Trust defaults off. The explicit `render` option requires Render's `RENDER=true` platform variable and trusts one nearest proxy hop. Do not expose the backend through an ingress bypass or untrusted private services. Seed refuses production: configure reviewers/resources in a controlled development/test setup. Hosted browser acceptance remains pending; local tests do not establish live Render acceptance.
+
+### Render Web Service
+
+Connect the repository's `main` branch with the root directory left blank. Set build command `npm ci --include=dev && npm run build`, start command `npm start`, and health check `/api/health`.
+
+Add these in **Render → Environment**, not Git. The ignored local `.env` is not uploaded:
+
+| Variable | Render value |
+|---|---|
+| NODE_VERSION | `24.14.1` |
+| NODE_ENV | `production` |
+| HOST | `0.0.0.0` |
+| TRUST_PROXY | `render` |
+| APP_ORIGIN | Your exact Render HTTPS URL, e.g. `https://your-service.onrender.com` |
+| SESSION_SECRET | A fresh random secret of at least 32 characters; generate with `node -e "console.log(require('node:crypto').randomBytes(48).toString('hex'))"` |
+| MONGODB_URI | Your Atlas URI including `/labaccess_test_hosted` before its query string |
+
+Leave `PORT` to Render. Allow the service's outbound IP ranges in Atlas Network Access and scope the database user to the intended database. Save the variables and redeploy. A missing `.env` notice is expected; configuration errors now identify the variable without printing its value. If MongoDB fails initially, fix access/credentials and restart. A successful build alone does not confirm database readiness or login.
+
+Verify `/api/health` returns 200, then test learner/reviewer login, a request/decision, logout and detail-page reload. An empty Atlas database needs the guarded seed run from a controlled development environment before demo accounts/resources exist. See [Render Web Services](https://render.com/docs/web-services) and [Express proxy configuration](https://expressjs.com/en/guide/behind-proxies/).
 
 ## Environment variables
 
@@ -131,12 +151,13 @@ The server and seed load the repository-root `.env`. Existing process environmen
 |---|---|
 | NODE_ENV | `development`; also accepts `test` or `production` |
 | PORT | `3001`; keep it for the supplied Vite proxy |
+| HOST | `127.0.0.1` locally, `0.0.0.0` on Render; only these two values are accepted |
 | MONGODB_URI | Example points to local `labaccess_dev`; required for persistence; never committed |
 | DB_CONNECT_TIMEOUT_MS | `5000`; integer 100–30,000; bounded initial connection wait |
 | SESSION_SECRET | No usable default; required, at least 32 characters; generate a random value |
 | SESSION_MAX_AGE_MS | `28800000` (8 hours); rolling idle lifetime, 1 minute–7 days |
 | APP_ORIGIN | `http://127.0.0.1:5173`; exact allowed mutation origin; HTTPS required in production |
-| TRUST_PROXY | `false`; only alternative is `loopback` for the documented same-host TLS proxy |
+| TRUST_PROXY | `false`; accepts `loopback` for same-host TLS or `render` on Render (one hop) |
 | SEED_DEMO_PASSWORD | No usable default; synthetic 12–128-character password; seed only |
 
 Health is [GET /api/health](http://127.0.0.1:3001/api/health). Configured API routes return 503 when persistence is not ready. An initial connection/index failure requires restarting after fixing MongoDB. An established connection can reconnect after a later outage. Errors omit stack traces, credentials, hashes and session internals.

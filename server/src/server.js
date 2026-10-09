@@ -10,9 +10,16 @@ import { Resource } from "./modules/resources/resource.model.js";
 import { AccessRequest } from "./modules/requests/request.model.js";
 
 async function start() {
-  const config = readConfig();
-  if (!config.sessionSecret || config.sessionSecret.length < 32)
-    throw new Error("SESSION_SECRET must contain at least 32 characters.");
+  let config;
+  try {
+    config = readConfig();
+    if (!config.sessionSecret || config.sessionSecret.length < 32)
+      throw new Error("SESSION_SECRET must contain at least 32 characters.");
+  } catch (error) {
+    // Config validators use fixed messages, never supplied values or credentials.
+    console.error(`Configuration error: ${error.message}`);
+    throw error;
+  }
   let connected = false;
   try {
     await connectDatabase(config);
@@ -36,8 +43,8 @@ async function start() {
     config,
     isDatabaseReady: () => connected && databaseReady(),
   });
-  const listener = app.listen(config.port, "127.0.0.1", () =>
-    console.log(`LabAccess API listening on http://127.0.0.1:${config.port}`),
+  const listener = app.listen(config.port, config.host, () =>
+    console.log(`LabAccess API listening on http://${config.host}:${config.port}`),
   );
   listener.on("error", async () => {
     console.error(

@@ -26,6 +26,7 @@ test("real server startup builds workflow indexes and serves a persisted learner
       ...process.env,
       NODE_ENV: "test",
       PORT: String(port),
+      HOST: "0.0.0.0",
       APP_ORIGIN: origin,
       SESSION_SECRET: "startup-test-secret-at-least-thirty-two-characters",
       MONGODB_URI: mongo.getUri("labaccess_test_startup"),
@@ -49,6 +50,7 @@ test("real server startup builds workflow indexes and serves a persisted learner
         output += chunk;
         if (output.includes("LabAccess API listening")) {
           clearTimeout(timeout);
+          assert.match(output, /listening on http:\/\/0\.0\.0\.0:/);
           resolve();
         }
       });

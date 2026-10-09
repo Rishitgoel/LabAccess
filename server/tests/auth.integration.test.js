@@ -356,3 +356,24 @@ test("production cookies require an explicitly trusted loopback TLS proxy", asyn
     extraStores.push(untrusted.locals.sessionStore);
   }
 });
+
+test("Render HTTPS forwarding issues secure cookies and plain HTTP does not", async () => {
+  const app = createApp({
+    config: readConfig({
+      NODE_ENV: "production",
+      APP_ORIGIN: "https://labaccess.test",
+      SESSION_SECRET: config.sessionSecret,
+      RENDER: "true",
+      TRUST_PROXY: "render",
+    }),
+  });
+  try {
+    const response = await request(app).get("/api/auth/csrf")
+      .set("X-Forwarded-Proto", "https").expect(200);
+    assert.match(response.headers["set-cookie"]?.[0] ?? "", /HttpOnly; Secure; SameSite=Lax/);
+    const plain = await request(app).get("/api/auth/csrf").expect(200);
+    assert.equal(plain.headers["set-cookie"], undefined);
+  } finally {
+    extraStores.push(app.locals.sessionStore);
+  }
+});
