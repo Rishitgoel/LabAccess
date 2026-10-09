@@ -3,10 +3,10 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { MotionConfig } from "motion/react";
 import { SessionProvider, useSession } from "@/features/auth/SessionProvider";
-import AuthPage from "@/features/auth/AuthPage";
-import CatalogPage from "@/features/resources/CatalogPage";
-import RequestListPage from "@/features/requests/RequestListPage";
-import RequestDetailPage from "@/features/requests/RequestDetailPage";
+const AuthPage = React.lazy(() => import("@/features/auth/AuthPage"));
+const CatalogPage = React.lazy(() => import("@/features/resources/CatalogPage"));
+const RequestListPage = React.lazy(() => import("@/features/requests/RequestListPage"));
+const RequestDetailPage = React.lazy(() => import("@/features/requests/RequestDetailPage"));
 import { RouteState } from "@/components/feedback/RouteState";
 import { RouteFocus } from "@/components/layout/RouteFocus";
 const PreviewCatalog = React.lazy(() => import("./PreviewCatalog"));
@@ -48,71 +48,84 @@ function App() {
       <BrowserRouter>
         <SessionProvider>
           <RouteFocus />
-          <Routes>
-            <Route
-              path="/requests"
-              element={
-                <Guard role="learner">
-                  <RequestListPage />
-                </Guard>
-              }
-            />
-            <Route
-              path="/requests/:id"
-              element={
-                <Guard>
-                  <RequestDetailPage />
-                </Guard>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <Guard>
-                  <CatalogPage />
-                </Guard>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <Guard publicPage>
-                  <AuthPage key="login" />
-                </Guard>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <Guard publicPage>
-                  <AuthPage key="register" registration />
-                </Guard>
-              }
-            />
-            <Route
-              path="/review"
-              element={
-                <Guard role="reviewer">
-                  <RequestListPage review />
-                </Guard>
-              }
-            />
-            <Route
-              path="/preview"
-              element={
-                <React.Suspense
-                  fallback={
-                    <main className="session-state" role="status">
-                      Loading preview…
-                    </main>
-                  }
-                >
-                  <PreviewCatalog />
-                </React.Suspense>
-              }
-            />
-            <Route path="*" element={<RouteState />} />
-          </Routes>
+          <React.Suspense
+            fallback={
+              <main
+                id="main-content"
+                tabIndex={-1}
+                className="session-state"
+                role="status"
+              >
+                Loading…
+              </main>
+            }
+          >
+            <Routes>
+              <Route
+                path="/requests"
+                element={
+                  <Guard role="learner">
+                    <RequestListPage />
+                  </Guard>
+                }
+              />
+              <Route
+                path="/requests/:id"
+                element={
+                  <Guard>
+                    <RequestDetailPage />
+                  </Guard>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <Guard>
+                    <CatalogPage />
+                  </Guard>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <Guard publicPage>
+                    <AuthPage key="login" />
+                  </Guard>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <Guard publicPage>
+                    <AuthPage key="register" registration />
+                  </Guard>
+                }
+              />
+              <Route
+                path="/review"
+                element={
+                  <Guard role="reviewer">
+                    <RequestListPage review />
+                  </Guard>
+                }
+              />
+              <Route
+                path="/preview"
+                element={
+                  <React.Suspense
+                    fallback={
+                      <main className="session-state" role="status">
+                        Loading preview…
+                      </main>
+                    }
+                  >
+                    <PreviewCatalog />
+                  </React.Suspense>
+                }
+              />
+              <Route path="*" element={<RouteState />} />
+            </Routes>
+          </React.Suspense>
         </SessionProvider>
       </BrowserRouter>
     </MotionConfig>
