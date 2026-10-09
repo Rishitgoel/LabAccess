@@ -2,7 +2,9 @@
 
 LabAccess is a MERN application for requesting and reviewing access to learning resources. Learners explain what they need, reviewers record decisions, and both can inspect the saved history. **Approval records a decision inside LabAccess; it does not provision external access.**
 
-The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 setup is verified from a fresh GitHub clone; all 57 tests pass, including a hidden-checkout SPA regression. Public hosting, full-motion visual acceptance, genuine Code0/Kiro task evidence, and developer explanation acceptance remain open. See [verification](docs/verification.md) for the scope of each result.
+The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 setup was verified from a fresh GitHub clone. The current code passes 64 checks, including a hidden-checkout SPA regression. Four genuine Kiro tasks are documented. Hosted browser workflow, full-motion visual acceptance, assessment tool identity and developer explanation acceptance remain open. See [verification](docs/verification.md) and the [Kiro review](docs/kiro-review.md) for scope.
+
+Hosted app: [labaccess.onrender.com](https://labaccess.onrender.com/). Public health was checked separately; the latest lazy-loaded client has not yet received browser acceptance.
 
 ![Approved learner request with six saved events](docs/screenshots/phase7/approved-1440.png)
 
@@ -63,7 +65,7 @@ npm run mongo
 
 Wait for `Development MongoDB listening on 127.0.0.1:27017`. This runs a genuine standalone mongod and preserves this checkout's data in ignored `.local/mongodb` across restarts. It installs no system service. Stop with Ctrl+C; there is no destructive reset command. The helper is for development, not hosting.
 
-**Atlas:** create a dedicated demo database, allow only the needed client IP, and use a database user scoped to that database. Set the Atlas connection string in `.env` with a supported seed database name. Encode reserved characters in credentials. Follow the official [Atlas connection guide](https://www.mongodb.com/docs/atlas/connect-to-database-deployment/). Keep the URI outside Git. The Atlas setup is an alternative; the verification ledger uses local MongoDB and does not claim a live Atlas test.
+**Atlas:** create a dedicated demo database, allow only the needed client IP, and use a database user scoped to that database. Set the Atlas connection string in `.env` with a supported seed database name. Encode reserved characters in credentials. Follow the official [Atlas connection guide](https://www.mongodb.com/docs/atlas/connect-to-database-deployment/). Keep the URI outside Git. The automated suite uses isolated local MongoDB; live Atlas demo seeding and readback were separately verified on October 9.
 
 ### Seed and development server
 
@@ -105,7 +107,7 @@ npm run build
 npm audit
 ```
 
-Tests use separate disposable real MongoDB instances, not the configured development database. They cover sessions/CSRF, role/ownership isolation, unique indexes, validation, transitions/history, concurrent writes, filters/paging and write recovery. The first test run may download mongod. There are 16 client and 41 backend checks, including a hidden-checkout built-SPA regression; a real server child process also verifies startup and persistence. The current build succeeds with a non-failing >500 kB main-chunk advisory.
+Tests use separate disposable real MongoDB instances, not the configured development database. They cover sessions/CSRF, role/ownership isolation, unique indexes, validation, transitions/history, concurrent writes, filters/paging and write recovery. The first test run may download mongod. There are 16 client and 48 backend checks, including a hidden-checkout built-SPA regression; a real server child process also verifies startup and persistence. The current build succeeds without a chunk-size warning: the main entry is 45.18 kB and the largest vendor chunk is 247.22 kB. Vendor splitting does not imply the same reduction in total initial transfer.
 
 For a **local built-client check**, stop `npm run dev`, edit `.env` to `APP_ORIGIN=http://127.0.0.1:3001` while leaving `NODE_ENV=development`, then run:
 
@@ -176,9 +178,9 @@ Details: [architecture](docs/architecture.md), [API contract](docs/api-contract.
 
 ## AI Development Experience
 
-**Required named tool: Code0 or Kiro. Verified completed named-tool tasks: zero.** Kiro was recommended, but signed-in use and the assessment email's tool-domain identity remain unresolved. Codex developed and checked this repository; it does not satisfy that named-tool requirement. No 3–5-task compliance claim is made.
+**Required named tool: Code0 or Kiro. Four genuine Kiro tasks are evidenced and reviewed.** The user's reports and committed changes cover request-body protection, bundle splitting, production database-name validation and Render proxy tests. The assessment email's tool-domain identity and installed version remain unresolved; task evidence alone does not resolve that identity question.
 
-Five real **Codex** task examples, accepted/corrected suggestions, actual issues, verification and commit links are recorded in [AI usage evidence](docs/ai-usage.md). They are explicitly separate from the pending Code0/Kiro evidence. Installation, an account, a prepared prompt or tests suggested by Codex must not be presented as a completed Kiro task.
+Four Kiro tasks, accepted/corrected suggestions and verification are recorded in the [Kiro review](docs/kiro-review.md). Earlier Codex work is recorded separately in [AI usage evidence](docs/ai-usage.md). A review repair is attributed to Codex, rather than retroactively attributed to Kiro. The fifth documentation prompt remains pending.
 
 ## Screenshots and known limitations
 
@@ -188,6 +190,6 @@ Actual synthetic-data application captures: [approved desktop](docs/screenshots/
 
 `docs/ui-references` and `sample-ui.png` are **design concepts**, not application screenshots. `/preview` is an explicitly unsaved design demo and is not persistence evidence.
 
-Optional search/category controls, count summaries and a hosted demo are omitted. Payments, notifications, password reset, uploads, external provisioning, role/resource management, multiple organizations and real-time updates are outside scope. No public HTTPS workflow or live Atlas run is claimed. The tested browser has reduced motion enabled; full-motion smoothness remains unverified. Genuine named-tool tasks and the developer's independent explanation remain human acceptance gates.
+Optional search/category controls and count summaries are omitted. Payments, notifications, password reset, uploads, external provisioning, role/resource management, multiple organizations and real-time updates are outside scope. Atlas demo seeding and readback were verified separately; full public HTTPS workflow acceptance remains open. The tested browser has reduced motion enabled; full-motion smoothness remains unverified. Assessment tool identity and the developer's independent explanation remain acceptance gates.
 
 [Implementation tracker](IMPLEMENTATION_PLAN.md#17-daily-progress-tracking) · [Public repository](https://github.com/Rishitgoel/LabAccess). Assessment submission has not been emailed.

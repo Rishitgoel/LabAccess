@@ -1,3 +1,5 @@
+import { mongo } from "mongoose";
+
 function integer(value, fallback, min, max, name) {
   const parsed = Number(value ?? fallback);
   if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
@@ -45,7 +47,13 @@ export function readConfig(env = process.env) {
   if (rawUri && nodeEnv === "production") {
     let dbName;
     try {
-      dbName = new URL(rawUri).pathname.slice(1);
+      // Use the driver's parser: WHATWG URL rejects valid multi-host URIs.
+      // Constructing a client parses configuration without opening a connection.
+      const client = new mongo.MongoClient(rawUri);
+      const explicitPath = rawUri.match(
+        /^mongodb(?:\+srv)?:\/\/[^/?]+\/([^?]*)/,
+      )?.[1];
+      dbName = explicitPath && client.options.dbName?.trim();
     } catch {
       throw new Error("MONGODB_URI is not a valid connection string.");
     }

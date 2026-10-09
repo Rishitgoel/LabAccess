@@ -2,7 +2,7 @@
 
 **Version:** 1.1  
 **Planning date:** October 8, 2026  
-**Status:** Phases 1–5 and Phase 7 verified locally; Phase 6 implementation and reduced-motion checks verified. Full-motion visual acceptance, genuine Kiro evidence, human explanation, and hosting/submission remain open.
+**Status:** Phases 1–5 and Phase 7 verified locally; Phase 6 implementation and reduced-motion checks verified. October 9: four genuine Kiro tasks reviewed, Render deployed and Atlas demo seed verified. Full-motion visual acceptance, hosted workflow/browser checks for the latest lazy-loaded build, assessment tool identity, human explanation and submission remain open. See [Kiro review](docs/kiro-review.md); earlier dated checkpoints below retain their historical status.
 **Requirements:** [PRD.md](PRD.md)  
 **Visual specification:** [DESIGN.md](DESIGN.md)  
 **Selected reference:** [sample-ui.png](sample-ui.png)  

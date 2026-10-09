@@ -252,7 +252,7 @@ test("forged leftmost X-Forwarded-For address is never the trusted client IP und
   // Stand up a minimal isolated test app — not a product app, not createApp.
   // This avoids adding any diagnostic endpoint to production code.
   const probe = express();
-  probe.set("trust proxy", 1); // mirrors readConfig({ TRUST_PROXY: "render" }).trustProxy
+  probe.set("trust proxy", readConfig({ RENDER: "true", TRUST_PROXY: "render" }).trustProxy);
 
   // Single test-only route that echoes req.ip so assertions can read it.
   probe.get("/reflect", (req, res) => res.json({ ip: req.ip }));
@@ -265,7 +265,7 @@ test("forged leftmost X-Forwarded-For address is never the trusted client IP und
   //
   // With trust proxy = 1 the TCP socket peer (supertest loopback) is the one
   // trusted hop. Express uses the *rightmost* XFF entry — "10.0.0.2" — as
-  // req.ip. The forged "1.2.3.4" stays in req.ips but never becomes req.ip.
+  // req.ip. The forged "1.2.3.4" is excluded from the accepted address chain.
   const forgedResponse = await request(probe)
     .get("/reflect")
     .set("X-Forwarded-For", "1.2.3.4, 10.0.0.2")
@@ -345,6 +345,30 @@ test("forged leftmost X-Forwarded-For address is never the trusted client IP und
     false,
     "hop 1 and beyond must not be trusted — broadening trust would allow IP forgery",
   );
+});
+
+test("production database safeguard supports standard multi-host and SRV URIs", () => {
+  const production = { NODE_ENV: "production", APP_ORIGIN: "https://example.test" };
+  for (const uri of [
+    "mongodb://127.0.0.1:27017/demo",
+    "mongodb://host1:27017,host2:27017/demo?replicaSet=rs0",
+    "mongodb://[::1]:27017/demo",
+    "mongodb+srv://synthetic-host.mongodb.net/demo?appName=Demo",
+  ]) {
+    assert.doesNotThrow(() => readConfig({ ...production, MONGODB_URI: uri }));
+  }
+  for (const uri of [
+    "mongodb://host1:27017,host2:27017/?replicaSet=rs0",
+    "mongodb+srv://synthetic-host.mongodb.net",
+    "mongodb://synthetic:private-value@host1:27017/?appName=Demo",
+    "https://synthetic-host.test/demo",
+  ]) {
+    assert.throws(() => readConfig({ ...production, MONGODB_URI: uri }), error => {
+      assert.match(error.message, /MONGODB_URI/);
+      assert.doesNotMatch(error.message, /private-value|synthetic-host|host1|appName=Demo/);
+      return true;
+    });
+  }
 });
 
 test("production rejects MongoDB URI without explicit database name", () => {

@@ -1,5 +1,9 @@
 # AI usage evidence
 
+## Current evidence — October 9, 2026
+
+The user supplied genuine Kiro reports for **four tasks**: oversized-body regression, route/vendor splitting, production database-name validation, and Render forwarded-IP testing. Their changes are present in `3e0d871` and `ddc6cae` and were independently reviewed. See [Kiro review](kiro-review.md) for accepted suggestions, report corrections, verification, limitations and a separate Codex compatibility repair. The installed tool version and assessment-domain identity remain unconfirmed. The zero-task counts below describe earlier October 8 checkpoints, not the current task count. The fifth documentation prompt has not been reported as completed Kiro work.
+
 ## Named-tool gate
 
 October 8, 2026: user asked for the best suited tool offering free credits and will create an account. Recommendation: Kiro IDE on its Free tier. [Official pricing](https://kiro.dev/pricing/) currently lists $0/month and 50 monthly credits; [official download](https://kiro.dev/downloads/). Account access and a real development task are pending. Free credits do not establish assessment compliance.
