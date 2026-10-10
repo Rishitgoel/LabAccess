@@ -40,6 +40,7 @@ All routes are prefixed `/api`. Only health and CSRF bootstrap are public reads.
 | GET `/auth/csrf` | none | `{data:{csrfToken}}`; anonymous session allowed |
 | POST `/auth/register` | `{name,email,password}` | 201 public learner profile; does not automatically log in |
 | POST `/auth/login` | `{email,password}` | 200 profile; regenerated session |
+| POST `/auth/demo` | `{role:"requester"\|"approver"}` | Opt-in shared synthetic account login; 200 profile, regenerated session. Requires `DEMO_LOGIN_ENABLED=true`; otherwise 403. Same Origin/CSRF and rate-limit checks as login. |
 | POST `/auth/logout` | `{}` | `{data:{loggedOut:true}}`; invalidate session/cookie |
 | GET `/auth/me` | none | `{data:{id,name,email,role}}` |
 | GET `/resources` | `page,pageSize` | paginated active resources |

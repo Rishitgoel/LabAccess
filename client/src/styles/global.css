@@ -708,6 +708,26 @@ p {
   font-size: 0.875rem;
   color: var(--muted-foreground);
 }
+.auth-demo {
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+  padding-top: 20px;
+}
+.auth-demo > p {
+  margin: 0 0 12px;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  text-align: center;
+}
+.auth-demo-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.auth-demo-buttons > button {
+  flex: 1 1 150px;
+  min-height: 44px;
+}
 .auth-switch a {
   text-decoration: underline;
   color: var(--foreground);

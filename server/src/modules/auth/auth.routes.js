@@ -4,13 +4,20 @@ import { exactFields } from "../../middleware/errors.js";
 import { requireAuth } from "../../middleware/auth.js";
 import { newCsrfToken } from "../../middleware/csrf.js";
 import { cookieName, cookieOptions } from "../../config/session.js";
-import { register, login, validateCredentials } from "./auth.service.js";
+import { register, login, demoLogin, validateCredentials } from "./auth.service.js";
 const sessionCall = (req, method) =>
   new Promise((resolve, reject) =>
     req.session[method]((error) => (error ? reject(error) : resolve())),
   );
 export function authRoutes(config) {
   const router = Router();
+  async function startSession(req, res, user) {
+    await sessionCall(req, "regenerate");
+    req.session.userId = user.id;
+    req.session.csrfToken = newCsrfToken();
+    await sessionCall(req, "save");
+    res.json({ data: user });
+  }
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 20,
@@ -39,11 +46,12 @@ export function authRoutes(config) {
   router.post("/login", limiter, async (req, res) => {
     exactFields(req.body, ["email", "password"]);
     const user = await login(validateCredentials(req.body));
-    await sessionCall(req, "regenerate");
-    req.session.userId = user.id;
-    req.session.csrfToken = newCsrfToken();
-    await sessionCall(req, "save");
-    res.json({ data: user });
+    await startSession(req, res, user);
+  });
+  router.post("/demo", limiter, async (req, res) => {
+    exactFields(req.body, ["role"]);
+    const user = await demoLogin(req.body.role, config.demoLoginEnabled);
+    await startSession(req, res, user);
   });
   router.get("/me", requireAuth, (req, res) => res.json({ data: req.user }));
   router.post("/logout", requireAuth, async (req, res) => {

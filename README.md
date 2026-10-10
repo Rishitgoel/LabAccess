@@ -2,9 +2,11 @@
 
 LabAccess is a MERN application for requesting and reviewing access to learning resources. Learners explain what they need, reviewers record decisions, and both can inspect the saved history. **Approval records a decision inside LabAccess; it does not provision external access.**
 
-The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 setup was verified from a fresh GitHub clone. The current code passes 64 checks, including a hidden-checkout SPA regression. Four genuine Kiro tasks are documented. Hosted browser workflow, full-motion visual acceptance, assessment tool identity and developer explanation acceptance remain open. See [verification](docs/verification.md) and the [Kiro review](docs/kiro-review.md) for scope.
+The functional workflow and Phase 7 correctness checks are verified locally. Phase 8 setup was verified from a fresh GitHub clone. The current code passes 65 checks, including a hidden-checkout SPA regression. Four genuine Kiro tasks are documented. Hosted browser workflow, full-motion visual acceptance, assessment tool identity and developer explanation acceptance remain open. See [verification](docs/verification.md) and the [Kiro review](docs/kiro-review.md) for scope.
 
 Hosted app: [labaccess.onrender.com](https://labaccess.onrender.com/). Public health was checked separately; the latest lazy-loaded client has not yet received browser acceptance.
+
+The login page offers **Demo requester** and **Demo approver** buttons. Set `DEMO_LOGIN_ENABLED=true` in Render's Environment and redeploy to enable them. This deliberately gives visitors access to the existing shared synthetic learner/reviewer accounts without publishing passwords; use it only with the demo database. Normal login remains available, and registration still creates learners only. Demo sessions use the same CSRF checks, session rotation, cookies and rate limiting as normal login.
 
 ![Approved learner request with six saved events](docs/screenshots/phase7/approved-1440.png)
 
@@ -107,7 +109,7 @@ npm run build
 npm audit
 ```
 
-Tests use separate disposable real MongoDB instances, not the configured development database. They cover sessions/CSRF, role/ownership isolation, unique indexes, validation, transitions/history, concurrent writes, filters/paging and write recovery. The first test run may download mongod. There are 16 client and 48 backend checks, including a hidden-checkout built-SPA regression; a real server child process also verifies startup and persistence. The current build succeeds without a chunk-size warning: the main entry is 45.18 kB and the largest vendor chunk is 247.22 kB. Vendor splitting does not imply the same reduction in total initial transfer.
+Tests use separate disposable real MongoDB instances, not the configured development database. They cover sessions/CSRF, role/ownership isolation, unique indexes, validation, transitions/history, concurrent writes, filters/paging and write recovery. The first test run may download mongod. There are 16 client and 49 backend checks, including a hidden-checkout built-SPA regression; a real server child process also verifies startup and persistence. The current build succeeds without a chunk-size warning: the main entry is 45.18 kB and the largest vendor chunk is 247.22 kB. Vendor splitting does not imply the same reduction in total initial transfer.
 
 For a **local built-client check**, stop `npm run dev`, edit `.env` to `APP_ORIGIN=http://127.0.0.1:3001` while leaving `NODE_ENV=development`, then run:
 
@@ -161,6 +163,7 @@ The server and seed load the repository-root `.env`. Existing process environmen
 | APP_ORIGIN | `http://127.0.0.1:5173`; exact allowed mutation origin; HTTPS required in production |
 | TRUST_PROXY | `false`; accepts `loopback` for same-host TLS or `render` on Render (one hop) |
 | SEED_DEMO_PASSWORD | No usable default; synthetic 12–128-character password; seed only |
+| DEMO_LOGIN_ENABLED | `false`; set `true` only for a shared demo database to enable requester/approver quick login |
 
 Health is [GET /api/health](http://127.0.0.1:3001/api/health). Configured API routes return 503 when persistence is not ready. An initial connection/index failure requires restarting after fixing MongoDB. An established connection can reconnect after a later outage. Errors omit stack traces, credentials, hashes and session internals.
 

@@ -305,3 +305,8 @@ Evidence: [phase10-checks.json](phase10-checks.json). Fresh-clone and live brows
 # October 9 — Kiro review follow-up
 
 Four user-supplied Kiro tasks were reviewed against commits `3e0d871` and `ddc6cae`. Before corrections, `npm test` passed 63 tests. After a separately attributed Codex MongoDB URI compatibility repair and proxy-test correction, 16 client checks and 48 backend checks passed (64 total). Backend verification was run sequentially from `server` after temporary parallel MongoDB startup timeouts; a root-directory attempt failed two subprocess tests because of their working-directory requirement. `npm run build` passed with main entry 45.18 kB and largest vendor chunk 247.22 kB, without a size warning. No new browser workflow acceptance or assessment-tool identity claim is made. Details: [Kiro review](kiro-review.md).
+
+## October 10 — Quick demo login
+
+Added requester/approver login buttons backed by an explicit DEMO_LOGIN_ENABLED opt-in for the fixed seeded accounts. No passwords are included in the client. Shared login uses CSRF/origin checks, rate limiting, session/token rotation and logout. Backend checks: 49 passed sequentially; client checks: 16 passed; build passed without size warnings. Browser and hosted activation remain unverified; Render must set DEMO_LOGIN_ENABLED=true. Ignored local .env was enabled. This is Codex work, separate from the four documented Kiro tasks.
+

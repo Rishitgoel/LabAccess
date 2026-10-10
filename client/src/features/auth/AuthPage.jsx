@@ -25,6 +25,20 @@ export default function AuthPage({ registration = false }) {
   const { login, expired } = useSession();
   const navigate = useNavigate(),
     location = useLocation();
+  async function quickDemo(role) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    setFields({});
+    try {
+      await login(undefined, role);
+      navigate(role === "approver" ? "/review" : "/", { replace: true });
+    } catch (failure) {
+      setError(failure.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   async function submit(event) {
     event.preventDefault();
     setError("");
@@ -151,6 +165,19 @@ export default function AuthPage({ registration = false }) {
           {busy ? "Please wait…" : registration ? "Create account" : "Sign in"}
           <ArrowRight aria-hidden="true" />
         </Button>
+        {!registration && (
+          <div className="auth-demo" aria-label="Quick demo">
+            <p>Try a quick demo</p>
+            <div className="auth-demo-buttons">
+              <Button type="button" variant="outline" disabled={busy} onClick={() => quickDemo("requester")}>
+                Demo requester
+              </Button>
+              <Button type="button" variant="outline" disabled={busy} onClick={() => quickDemo("approver")}>
+                Demo approver
+              </Button>
+            </div>
+          </div>
+        )}
       </form>
     </AuthLayout>
   );

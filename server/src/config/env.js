@@ -10,6 +10,8 @@ function integer(value, fallback, min, max, name) {
 
 export function readConfig(env = process.env) {
   const nodeEnv = env.NODE_ENV ?? "development";
+  if (![undefined, "", "false", "true"].includes(env.DEMO_LOGIN_ENABLED))
+    throw new Error("DEMO_LOGIN_ENABLED must be true or false.");
   if (!["development", "test", "production"].includes(nodeEnv)) {
     throw new Error("NODE_ENV must be development, test, or production.");
   }
@@ -67,6 +69,7 @@ export function readConfig(env = process.env) {
   }
   return {
     nodeEnv,
+    demoLoginEnabled: env.DEMO_LOGIN_ENABLED === "true",
     // Render's public ingress terminates TLS; trust only the nearest proxy hop.
     // Do not expose this listener through a bypass or an untrusted private service.
     trustProxy:

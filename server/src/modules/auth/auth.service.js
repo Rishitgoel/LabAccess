@@ -41,6 +41,18 @@ export const hashPassword = (password) =>
     parallelism: 1,
   });
 let dummyHash;
+export async function demoLogin(role, enabled) {
+  if (!enabled)
+    throw new ApiError(403, "DEMO_DISABLED", "Quick demo is not enabled. Sign in with your demo credentials.");
+  const accounts = { requester: ["learner@labaccess.test", "learner"], approver: ["reviewer@labaccess.test", "reviewer"] };
+  if (typeof role !== "string" || !Object.hasOwn(accounts, role))
+    throw new ApiError(400, "VALIDATION_ERROR", "Choose requester or approver.");
+  const [email, accountRole] = accounts[role];
+  const user = await User.findOne({ email, role: accountRole });
+  if (!user)
+    throw new ApiError(503, "DEMO_UNAVAILABLE", "Demo accounts are unavailable. Try again later.");
+  return publicUser(user);
+}
 export async function register(credentials) {
   try {
     return publicUser(

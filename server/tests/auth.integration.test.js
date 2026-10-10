@@ -59,6 +59,38 @@ const post = (client, path, body) =>
     .set("Origin", origin)
     .set("X-CSRF-Token", client.token)
     .send(body);
+test("quick demo is opt-in, limited to seeded roles, CSRF protected and rotates sessions", async () => {
+  const disabled = await client();
+  await post(disabled, "demo", { role: "requester" }).expect(403);
+  const demoApp = createApp({ config: { ...config, demoLoginEnabled: true } });
+  extraStores.push(demoApp.locals.sessionStore);
+  for (const [role, email, expectedRole] of [
+    ["requester", "learner@labaccess.test", "learner"],
+    ["approver", "reviewer@labaccess.test", "reviewer"],
+  ]) {
+    const agent = request.agent(demoApp);
+    const csrf = await agent.get("/api/auth/csrf").expect(200);
+    const token = csrf.body.data.csrfToken;
+    await agent.post("/api/auth/demo").set("Origin", origin).send({ role }).expect(403);
+    const response = await agent.post("/api/auth/demo")
+      .set("Origin", origin).set("X-CSRF-Token", token).send({ role }).expect(200);
+    assert.equal(response.body.data.email, email);
+    assert.equal(response.body.data.role, expectedRole);
+    assert.equal(response.body.data.passwordHash, undefined);
+    assert.notEqual(response.headers["set-cookie"][0], csrf.headers["set-cookie"][0]);
+    const fresh = await agent.get("/api/auth/csrf").expect(200);
+    assert.notEqual(fresh.body.data.csrfToken, token);
+    await agent.get("/api/review/requests").expect(role === "approver" ? 200 : 403);
+    await agent.post("/api/auth/logout").set("Origin", origin)
+      .set("X-CSRF-Token", fresh.body.data.csrfToken).send({}).expect(200);
+    await agent.get("/api/auth/me").expect(401);
+  }
+  const agent = request.agent(demoApp);
+  const csrf = (await agent.get("/api/auth/csrf")).body.data.csrfToken;
+  for (const body of [{role:"admin"},{role:["requester"]},{role:"approver",email:"other@test.example"}])
+    await agent.post("/api/auth/demo").set("Origin", origin)
+      .set("X-CSRF-Token", csrf).send(body).expect(400);
+});
 async function signIn(email = "learner@labaccess.test") {
   const c = await client();
   const login = await post(c, "login", { email, password }).expect(200);

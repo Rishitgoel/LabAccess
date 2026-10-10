@@ -29,10 +29,10 @@ export function SessionProvider({ children }) {
     window.addEventListener("session-expired", expired);
     return () => window.removeEventListener("session-expired", expired);
   }, []);
-  async function login(credentials) {
-    const { data } = await api("/auth/login", {
+  async function login(credentials, demoRole) {
+    const { data } = await api(demoRole ? "/auth/demo" : "/auth/login", {
       method: "POST",
-      body: credentials,
+      body: demoRole ? { role: demoRole } : credentials,
     });
     clearCsrf();
     setSession({ loading: false, user: data, error: null });
